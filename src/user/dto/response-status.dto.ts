@@ -8,9 +8,9 @@ export class ResponseStatusDeleteUser {
     acknowledged: boolean;
     deletedCount: number;
   };
-  //   taskStatus: {
-  //     acknowledged: boolean;
-  //     deletedCount: number;
-  //   };
+  taskStatus: {
+    acknowledged: boolean;
+    deletedCount: number;
+  };
   message: string;
 }

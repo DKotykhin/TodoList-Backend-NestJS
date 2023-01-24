@@ -1,0 +1,20 @@
+body {
+    background-color: rgba(230, 230, 230, 0.2);
+    font-family: monospace;
+    text-align: center;    
+}
+
+.title {
+    margin-top: 100px;
+    color: rgb(0, 161, 182);
+    font-size: 50px;
+    font-weight: 700;
+}
+
+.subtitle {        
+    margin-top: 20px;
+    margin-bottom: 40px;
+    color: rgb(0, 161, 182);
+    font-size: 25px;
+    font-weight: 700;
+}

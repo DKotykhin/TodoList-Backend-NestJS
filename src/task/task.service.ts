@@ -8,7 +8,9 @@ import { CreateTaskDto, TaskDto } from './dto/task.dto';
 
 @Injectable()
 export class TaskService {
-  constructor(@InjectModel(Task.name) private taskModel: Model<TaskDocument>) {}
+  constructor(
+    @InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>,
+  ) {}
 
   async get(param: QueryDto, userId: Types.ObjectId) {
     const { limit, page, tabKey, sortField, sortOrder, search } = param;
@@ -132,9 +134,7 @@ export class TaskService {
     };
   }
 
-  async delete(taskId: { _id: Types.ObjectId }, userId: Types.ObjectId) {
-    const { _id } = taskId;
-
+  async delete(_id: string, userId: Types.ObjectId) {
     const taskStatus = await this.taskModel.deleteOne({ _id, author: userId });
     if (!taskStatus.deletedCount) {
       throw new HttpException('Deleted forbidden', HttpStatus.FORBIDDEN);

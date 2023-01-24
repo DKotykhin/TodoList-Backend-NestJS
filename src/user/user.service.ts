@@ -4,10 +4,14 @@ import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
 import { User, UserDocument } from './schema/user.schema';
+import { Task, TaskDocument } from 'src/task/schema/task.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>,
+  ) {}
 
   private createPasswordHash = async (password: string) => {
     const salt = await bcrypt.genSalt(5);
@@ -102,9 +106,10 @@ export class UserService {
 
   async deleteUser(_id: Types.ObjectId) {
     const user = await this.findUser(_id);
+    const taskStatus = await this.taskModel.deleteMany({ author: _id });
     const userStatus = await this.userModel.deleteOne({ _id });
     const message = `User ${user.name} successfully deleted`;
 
-    return { userStatus, message };
+    return { userStatus, taskStatus, message };
   }
 }

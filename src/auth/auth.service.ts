@@ -11,7 +11,7 @@ import { User, UserDocument } from '../user/schema/user.schema';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private jwtService: JwtService,
   ) {}
 

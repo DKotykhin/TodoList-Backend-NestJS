@@ -10,7 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Types } from 'mongoose';
 
 import { AuthGuard } from 'src/auth/auth.guard';
 import { TaskService } from './task.service';
@@ -26,8 +25,8 @@ import {
 @Controller('task')
 export class TaskController {
   constructor(
-    private taskService: TaskService,
-    private jwtServise: JwtService,
+    private readonly taskService: TaskService,
+    private readonly jwtServise: JwtService,
   ) {}
 
   private getUserId = async (authorization: string) => {
@@ -66,9 +65,9 @@ export class TaskController {
   @Delete()
   async delete(
     @Headers('authorization') authorization: string,
-    @Body() deleteTask: { _id: Types.ObjectId },
+    @Body('_id') _id: string,
   ): Promise<DeleteTaskResponse> {
     const user = await this.getUserId(authorization);
-    return this.taskService.delete(deleteTask, user._id);
+    return this.taskService.delete(_id, user._id);
   }
 }

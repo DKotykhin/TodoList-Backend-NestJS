@@ -23,8 +23,8 @@ import {
 @Controller('user')
 export class UserController {
   constructor(
-    private userService: UserService,
-    private jwtServise: JwtService,
+    private readonly userService: UserService,
+    private readonly jwtServise: JwtService,
   ) {}
 
   private getUserId = async (authorization: string) => {
