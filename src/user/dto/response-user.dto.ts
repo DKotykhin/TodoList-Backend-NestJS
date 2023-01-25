@@ -1,6 +1,6 @@
 import { Schema, Types } from 'mongoose';
 
-export class ResponseUser {
+export class UserResponse {
   readonly _id: Types.ObjectId;
   readonly name: string;
   readonly email: string;

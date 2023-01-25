@@ -1,5 +1,5 @@
-import { ResponseUser } from 'src/user/dto/response-user.dto';
+import { UserResponse } from 'src/user/dto/response-user.dto';
 
-export class ResponseAuth extends ResponseUser {
+export class AuthResponse extends UserResponse {
   readonly token: string;
 }

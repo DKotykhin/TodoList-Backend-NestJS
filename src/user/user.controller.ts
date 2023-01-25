@@ -12,11 +12,11 @@ import { JwtService } from '@nestjs/jwt';
 
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
-import { Name, Password } from './dto/update-user.dto';
-import { ResponseUser } from './dto/response-user.dto';
+import { NameDto, PasswordDto } from './dto/update-user.dto';
+import { UserResponse } from './dto/response-user.dto';
 import {
-  ResponseStatusConfirmPassword,
-  ResponseStatusDeleteUser,
+  ConfirmPasswordResponse,
+  DeleteUserResponse,
 } from './dto/response-status.dto';
 
 @UseGuards(AuthGuard)
@@ -36,7 +36,7 @@ export class UserController {
   @Get('/me')
   async getUserByToken(
     @Headers('authorization') authorization: string,
-  ): Promise<ResponseUser> {
+  ): Promise<UserResponse> {
     const user = await this.getUserId(authorization);
     return this.userService.getUserByToken(user._id);
   }
@@ -44,8 +44,8 @@ export class UserController {
   @Patch('/name')
   async updateName(
     @Headers('authorization') authorization: string,
-    @Body() updateName: Name,
-  ): Promise<ResponseUser> {
+    @Body() updateName: NameDto,
+  ): Promise<UserResponse> {
     const user = await this.getUserId(authorization);
     return this.userService.updateName(updateName, user._id);
   }
@@ -53,8 +53,8 @@ export class UserController {
   @Post('/password')
   async confirmPassword(
     @Headers('authorization') authorization: string,
-    @Body() confirmPassword: Password,
-  ): Promise<ResponseStatusConfirmPassword> {
+    @Body() confirmPassword: PasswordDto,
+  ): Promise<ConfirmPasswordResponse> {
     const user = await this.getUserId(authorization);
     return this.userService.confirmPassword(confirmPassword, user._id);
   }
@@ -62,8 +62,8 @@ export class UserController {
   @Patch('/password')
   async updatePassword(
     @Headers('authorization') authorization: string,
-    @Body() updatePassword: Password,
-  ): Promise<ResponseUser> {
+    @Body() updatePassword: PasswordDto,
+  ): Promise<UserResponse> {
     const user = await this.getUserId(authorization);
     return this.userService.updatePassword(updatePassword, user._id);
   }
@@ -71,7 +71,7 @@ export class UserController {
   @Delete('/me')
   async deleteUser(
     @Headers('authorization') authorization: string,
-  ): Promise<ResponseStatusDeleteUser> {
+  ): Promise<DeleteUserResponse> {
     const user = await this.getUserId(authorization);
     return this.userService.deleteUser(user._id);
   }

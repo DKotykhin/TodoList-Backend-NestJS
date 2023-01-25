@@ -16,7 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { AuthGuard } from 'src/auth/auth.guard';
-import { ResponseUser } from 'src/user/dto/response-user.dto';
+import { UserResponse } from 'src/user/dto/response-user.dto';
 import { AvatarService } from './avatar.service';
 
 @UseGuards(AuthGuard)
@@ -48,7 +48,7 @@ export class AvatarController {
       }),
     )
     avatar: Express.Multer.File,
-  ): Promise<ResponseUser> {
+  ): Promise<UserResponse> {
     const user = await this.getUserId(authorization);
     return this.avatarService.createAvatar(user._id, avatar);
   }
@@ -56,7 +56,7 @@ export class AvatarController {
   @Delete()
   async deleteAvatar(
     @Headers('authorization') authorization: string,
-  ): Promise<ResponseUser> {
+  ): Promise<UserResponse> {
     const user = await this.getUserId(authorization);
     return this.avatarService.delete(user._id);
   }

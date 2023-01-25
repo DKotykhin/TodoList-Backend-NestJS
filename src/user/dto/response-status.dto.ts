@@ -1,9 +1,9 @@
-export class ResponseStatusConfirmPassword {
+export class ConfirmPasswordResponse {
   confirmStatus: boolean;
   message: string;
 }
 
-export class ResponseStatusDeleteUser {
+export class DeleteUserResponse {
   userStatus: {
     acknowledged: boolean;
     deletedCount: number;

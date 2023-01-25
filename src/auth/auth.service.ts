@@ -4,8 +4,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
-import { LoginUser } from './dto/login-user.dto';
-import { RegisterUser } from './dto/register-user.dto';
+import { LoginDto } from './dto/login-user.dto';
+import { RegisterDto } from './dto/register-user.dto';
 import { User, UserDocument } from '../user/schema/user.schema';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class AuthService {
     return passwordHash;
   };
 
-  async register(registerInput: RegisterUser) {
+  async register(registerInput: RegisterDto) {
     const { email, name, password } = registerInput;
     const candidat = await this.userModel.findOne({ email });
     if (candidat) {
@@ -43,7 +43,7 @@ export class AuthService {
     return { _id, email, name, createdAt, token, message };
   }
 
-  async login(loginInput: LoginUser) {
+  async login(loginInput: LoginDto) {
     const { email, password } = loginInput;
     const user = await this.userModel.findOne({ email });
     if (!user) {
