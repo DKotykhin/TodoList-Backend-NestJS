@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 
 import { LoginUser } from './dto/login-user.dto';
 import { RegisterUser } from './dto/register-user.dto';
-import { ResponseUser } from './dto/response-user.dto';
+import { ResponseAuth } from './dto/response-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -12,12 +12,12 @@ export class AuthController {
 
   @Post('/register')
   @HttpCode(HttpStatus.CREATED)
-  register(@Body() registerInput: RegisterUser): Promise<ResponseUser> {
+  register(@Body() registerInput: RegisterUser): Promise<ResponseAuth> {
     return this.authService.register(registerInput);
   }
 
   @Post('/login')
-  login(@Body() loginInput: LoginUser): Promise<ResponseUser> {
+  login(@Body() loginInput: LoginUser): Promise<ResponseAuth> {
     return this.authService.login(loginInput);
   }
 }
