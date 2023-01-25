@@ -43,10 +43,7 @@ export class AvatarService {
     const user = await this.userModel.findById(_id);
     fs.unlink('static' + user.avatarURL, async (err) => {
       if (err) {
-        throw new HttpException(
-          "Can't delete avatar - filepath",
-          HttpStatus.FORBIDDEN,
-        );
+        throw new HttpException("Can't delete avatar", HttpStatus.FORBIDDEN);
       }
     });
     const updatedUser = await this.userModel.findOneAndUpdate(

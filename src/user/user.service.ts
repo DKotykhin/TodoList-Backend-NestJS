@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
+import * as fs from 'fs';
 
 import { User, UserDocument } from './schema/user.schema';
 import { Task, TaskDocument } from 'src/task/schema/task.schema';
@@ -106,6 +107,13 @@ export class UserService {
 
   async deleteUser(_id: Types.ObjectId) {
     const user = await this.findUser(_id);
+    if (user.avatarURL) {
+      fs.unlink('static' + user.avatarURL, async (err) => {
+        if (err) {
+          throw new HttpException("Can't delete avatar", HttpStatus.FORBIDDEN);
+        }
+      });
+    }
     const taskStatus = await this.taskModel.deleteMany({ author: _id });
     const userStatus = await this.userModel.deleteOne({ _id });
     const message = `User ${user.name} successfully deleted`;
