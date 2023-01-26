@@ -4,12 +4,11 @@ import {
   Post,
   Patch,
   Delete,
-  Headers,
+  Req,
   Query,
   Body,
   UseGuards,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 import { AuthGuard } from 'src/auth/auth.guard';
 import { TaskService } from './task.service';
@@ -20,54 +19,42 @@ import {
   DeleteTaskResponse,
   GetTaskResponse,
 } from './dto/response-task.dto';
+import { RequestDto } from 'src/user/dto/request.dto';
 
 @UseGuards(AuthGuard)
 @Controller('task')
 export class TaskController {
-  constructor(
-    private readonly taskService: TaskService,
-    private readonly jwtServise: JwtService,
-  ) {}
-
-  private getUserId = async (authorization: string) => {
-    const token = authorization.split(' ')[1];
-    const user = this.jwtServise.verify(token);
-    return user;
-  };
+  constructor(private readonly taskService: TaskService) {}
 
   @Get()
   async getTask(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @Query() query: QueryDto,
   ): Promise<GetTaskResponse> {
-    const user = await this.getUserId(authorization);
-    return this.taskService.get(query, user._id);
+    return this.taskService.get(query, req.userId._id);
   }
 
   @Post()
   async creare(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @Body() createTask: CreateTaskDto,
   ): Promise<CreateTaskResponse> {
-    const user = await this.getUserId(authorization);
-    return this.taskService.create(createTask, user._id);
+    return this.taskService.create(createTask, req.userId._id);
   }
 
   @Patch()
   async update(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @Body() updateTask: TaskDto,
   ): Promise<CreateTaskResponse> {
-    const user = await this.getUserId(authorization);
-    return this.taskService.update(updateTask, user._id);
+    return this.taskService.update(updateTask, req.userId._id);
   }
 
   @Delete()
   async delete(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @Body('_id') _id: string,
   ): Promise<DeleteTaskResponse> {
-    const user = await this.getUserId(authorization);
-    return this.taskService.delete(_id, user._id);
+    return this.taskService.delete(_id, req.userId._id);
   }
 }

@@ -4,7 +4,7 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
-  Headers,
+  Req,
 } from '@nestjs/common';
 import { UploadedFile } from '@nestjs/common/decorators';
 import {
@@ -12,31 +12,22 @@ import {
   MaxFileSizeValidator,
   ParseFilePipe,
 } from '@nestjs/common/pipes';
-import { JwtService } from '@nestjs/jwt';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { AuthGuard } from 'src/auth/auth.guard';
+import { RequestDto } from 'src/user/dto/request.dto';
 import { UserResponse } from 'src/user/dto/response-user.dto';
 import { AvatarService } from './avatar.service';
 
 @UseGuards(AuthGuard)
 @Controller('avatar')
 export class AvatarController {
-  constructor(
-    private readonly jwtServise: JwtService,
-    private readonly avatarService: AvatarService,
-  ) {}
-
-  private getUserId = async (authorization: string) => {
-    const token = authorization.split(' ')[1];
-    const user = this.jwtServise.verify(token);
-    return user;
-  };
+  constructor(private readonly avatarService: AvatarService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadFile(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -49,15 +40,11 @@ export class AvatarController {
     )
     avatar: Express.Multer.File,
   ): Promise<UserResponse> {
-    const user = await this.getUserId(authorization);
-    return this.avatarService.createAvatar(user._id, avatar);
+    return this.avatarService.createAvatar(req.userId._id, avatar);
   }
 
   @Delete()
-  async deleteAvatar(
-    @Headers('authorization') authorization: string,
-  ): Promise<UserResponse> {
-    const user = await this.getUserId(authorization);
-    return this.avatarService.delete(user._id);
+  async deleteAvatar(@Req() req: RequestDto): Promise<UserResponse> {
+    return this.avatarService.delete(req.userId._id);
   }
 }

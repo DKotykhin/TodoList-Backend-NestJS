@@ -1,22 +1,17 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { Task, TaskSchema } from 'src/task/schema/task.schema';
 import { User, UserSchema } from './schema/user.schema';
+import { AuthModule } from 'src/auth/auth.module';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 @Module({
   imports: [
+    AuthModule,
     MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    JwtModule.register({
-      secret: process.env.SECRET_KEY || 'SECRET',
-      signOptions: {
-        expiresIn: '2d',
-      },
-    }),
   ],
   providers: [UserService],
   controllers: [UserController],

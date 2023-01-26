@@ -5,10 +5,9 @@ import {
   Get,
   Patch,
   UseGuards,
-  Headers,
   Post,
+  Req,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
@@ -18,61 +17,44 @@ import {
   ConfirmPasswordResponse,
   DeleteUserResponse,
 } from './dto/response-status.dto';
+import { RequestDto } from './dto/request.dto';
 
 @UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly jwtServise: JwtService,
-  ) {}
-
-  private getUserId = async (authorization: string) => {
-    const token = authorization.split(' ')[1];
-    const user = this.jwtServise.verify(token);
-    return user;
-  };
+  constructor(private readonly userService: UserService) {}
 
   @Get('/me')
-  async getUserByToken(
-    @Headers('authorization') authorization: string,
-  ): Promise<UserResponse> {
-    const user = await this.getUserId(authorization);
-    return this.userService.getUserByToken(user._id);
+  async getUserByToken(@Req() req: RequestDto): Promise<UserResponse> {
+    return this.userService.getUserByToken(req.userId._id);
   }
 
   @Patch('/name')
   async updateName(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @Body() updateName: NameDto,
   ): Promise<UserResponse> {
-    const user = await this.getUserId(authorization);
-    return this.userService.updateName(updateName, user._id);
+    return this.userService.updateName(updateName, req.userId._id);
   }
 
   @Post('/password')
   async confirmPassword(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @Body() confirmPassword: PasswordDto,
   ): Promise<ConfirmPasswordResponse> {
-    const user = await this.getUserId(authorization);
-    return this.userService.confirmPassword(confirmPassword, user._id);
+    return this.userService.confirmPassword(confirmPassword, req.userId._id);
   }
 
   @Patch('/password')
   async updatePassword(
-    @Headers('authorization') authorization: string,
+    @Req() req: RequestDto,
     @Body() updatePassword: PasswordDto,
   ): Promise<UserResponse> {
-    const user = await this.getUserId(authorization);
-    return this.userService.updatePassword(updatePassword, user._id);
+    return this.userService.updatePassword(updatePassword, req.userId._id);
   }
 
   @Delete('/me')
-  async deleteUser(
-    @Headers('authorization') authorization: string,
-  ): Promise<DeleteUserResponse> {
-    const user = await this.getUserId(authorization);
-    return this.userService.deleteUser(user._id);
+  async deleteUser(@Req() req: RequestDto): Promise<DeleteUserResponse> {
+    return this.userService.deleteUser(req.userId._id);
   }
 }

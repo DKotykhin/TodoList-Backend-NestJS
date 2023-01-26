@@ -14,12 +14,12 @@ import { AvatarModule } from './avatar/avatar.module';
     UserModule,
     AuthModule,
     TaskModule,
+    AvatarModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_DB),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
     }),
-    AvatarModule,
   ],
   controllers: [],
   providers: [],
