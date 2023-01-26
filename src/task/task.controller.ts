@@ -20,12 +20,21 @@ import {
   GetTaskResponse,
 } from './dto/response-task.dto';
 import { RequestDto } from 'src/user/dto/request.dto';
+import {
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Tasks')
 @UseGuards(AuthGuard)
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
+  @ApiOperation({ summary: 'Get all task' })
+  @ApiOkResponse({ type: GetTaskResponse })
   @Get()
   async getTask(
     @Req() req: RequestDto,
@@ -34,6 +43,12 @@ export class TaskController {
     return this.taskService.get(query, req.userId._id);
   }
 
+  @ApiOperation({ summary: 'Create task' })
+  @ApiOkResponse({
+    type: CreateTaskResponse,
+    description: 'Task successfully created',
+  })
+  @ApiForbiddenResponse({ description: "Can't create task" })
   @Post()
   async creare(
     @Req() req: RequestDto,
@@ -42,6 +57,12 @@ export class TaskController {
     return this.taskService.create(createTask, req.userId._id);
   }
 
+  @ApiOperation({ summary: 'Update task' })
+  @ApiOkResponse({
+    type: CreateTaskResponse,
+    description: 'Task successfully updted',
+  })
+  @ApiForbiddenResponse({ description: "Can't update task" })
   @Patch()
   async update(
     @Req() req: RequestDto,
@@ -50,6 +71,12 @@ export class TaskController {
     return this.taskService.update(updateTask, req.userId._id);
   }
 
+  @ApiOperation({ summary: 'Delete task' })
+  @ApiOkResponse({
+    type: DeleteTaskResponse,
+    description: 'Task successfully deleted',
+  })
+  @ApiForbiddenResponse({ description: "Can't delete task" })
   @Delete()
   async delete(
     @Req() req: RequestDto,

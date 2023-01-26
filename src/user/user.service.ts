@@ -96,7 +96,7 @@ export class UserService {
       { returnDocument: 'after' },
     );
     if (!updatedUser) {
-      throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
+      throw new HttpException("Can't update password", HttpStatus.FORBIDDEN);
     }
 
     const { email, name, createdAt, avatarURL } = updatedUser;
@@ -110,7 +110,7 @@ export class UserService {
     if (user.avatarURL) {
       fs.unlink('static' + user.avatarURL, async (err) => {
         if (err) {
-          throw new HttpException("Can't delete avatar", HttpStatus.FORBIDDEN);
+          throw new HttpException("Can't delete user", HttpStatus.FORBIDDEN);
         }
       });
     }
