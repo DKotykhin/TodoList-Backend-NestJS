@@ -6,6 +6,7 @@ import * as fs from 'fs';
 
 import { User, UserDocument } from './schema/user.schema';
 import { Task, TaskDocument } from 'src/task/schema/task.schema';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -28,12 +29,16 @@ export class UserService {
     return user;
   };
 
+  private userFields = (user: UserDto) => {
+    const { _id, email, name, createdAt, avatarURL } = user;
+    return { _id, email, name, createdAt, avatarURL };
+  };
+
   async getUserByToken(_id: Types.ObjectId) {
     const user = await this.findUser(_id);
     const message = `User ${user.name} successfully logged by token`;
-    const { email, name, createdAt, avatarURL } = user;
 
-    return { _id, email, name, createdAt, avatarURL, message };
+    return { ...this.userFields(user), message };
   }
 
   async updateName(data: { name: string }, _id: Types.ObjectId) {
@@ -48,15 +53,14 @@ export class UserService {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id },
       { name },
-      { returnDocument: 'after' },
+      { new: true },
     );
     if (!updatedUser) {
       throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
     }
-    const { email, createdAt, avatarURL } = updatedUser;
-    const message = `User ${name} successfully updated`;
+    const message = `User ${updatedUser.name} successfully updated`;
 
-    return { _id, name, email, createdAt, avatarURL, message };
+    return { ...this.userFields(updatedUser), message };
   }
 
   async confirmPassword(data: { password: string }, _id: Types.ObjectId) {
@@ -98,11 +102,9 @@ export class UserService {
     if (!updatedUser) {
       throw new HttpException("Can't update password", HttpStatus.FORBIDDEN);
     }
+    const message = `User ${updatedUser.name} successfully updated`;
 
-    const { email, name, createdAt, avatarURL } = updatedUser;
-    const message = `User ${name} successfully updated`;
-
-    return { _id, name, email, createdAt, avatarURL, message };
+    return { ...this.userFields(updatedUser), message };
   }
 
   async deleteUser(_id: Types.ObjectId) {

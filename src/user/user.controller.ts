@@ -20,7 +20,7 @@ import {
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
 import { NameDto, PasswordDto } from './dto/update-user.dto';
-import { UserResponse } from './dto/response-user.dto';
+import { UserResponse } from './dto/user.dto';
 import {
   ConfirmPasswordResponse,
   DeleteUserResponse,

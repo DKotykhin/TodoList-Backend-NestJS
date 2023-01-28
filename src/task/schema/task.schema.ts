@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as Sch } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 export type TaskDocument = HydratedDocument<Task>;
 
 @Schema({
   timestamps: true,
+  versionKey: false,
 })
 export class Task {
   @Prop({ required: true })
@@ -20,13 +21,13 @@ export class Task {
   completed: boolean;
 
   @Prop()
-  deadline: Sch.Types.Date;
+  deadline: MongooseSchema.Types.Date;
 
   @Prop()
-  createdAt: Sch.Types.Date;
+  createdAt: MongooseSchema.Types.Date;
 
   @Prop({ required: true, ref: 'User' })
-  author: Sch.Types.ObjectId;
+  author: MongooseSchema.Types.ObjectId;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);

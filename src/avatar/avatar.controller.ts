@@ -22,7 +22,7 @@ import {
 
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RequestDto } from 'src/user/dto/request.dto';
-import { UserResponse } from 'src/user/dto/response-user.dto';
+import { UserResponse } from 'src/user/dto/user.dto';
 import { AvatarService } from './avatar.service';
 
 @ApiTags('Avatar')

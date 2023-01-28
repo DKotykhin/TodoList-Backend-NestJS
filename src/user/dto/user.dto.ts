@@ -1,7 +1,7 @@
 import { Schema, Types } from 'mongoose';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class UserResponse {
+export class UserDto {
   @ApiProperty()
   readonly _id: Types.ObjectId;
 
@@ -16,7 +16,9 @@ export class UserResponse {
 
   @ApiProperty()
   readonly createdAt: Schema.Types.Date;
+}
 
+export class UserResponse extends UserDto {
   @ApiProperty()
   readonly message: string;
 }
