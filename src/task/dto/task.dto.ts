@@ -23,26 +23,12 @@ export class CreateTaskDto {
   readonly completed: boolean;
 }
 
-export class TaskDto {
+export class UpdateTaskDto extends CreateTaskDto {
   @ApiProperty()
   readonly _id: Types.ObjectId;
+}
 
+export class TaskDto extends UpdateTaskDto {
   @ApiProperty()
-  readonly title: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  readonly subtitle: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  readonly description: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  readonly deadline: Schema.Types.Date;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  readonly completed: boolean;
+  readonly createdAt: Schema.Types.Date;
 }

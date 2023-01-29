@@ -4,13 +4,34 @@ import { Model, Types } from 'mongoose';
 
 import { Task, TaskDocument } from './schema/task.schema';
 import { QueryDto } from './dto/query.dto';
-import { CreateTaskDto, TaskDto } from './dto/task.dto';
+import { CreateTaskDto, TaskDto, UpdateTaskDto } from './dto/task.dto';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>,
   ) {}
+
+  private taskFields = (task: TaskDto) => {
+    const {
+      _id,
+      title,
+      subtitle,
+      description,
+      completed,
+      deadline,
+      createdAt,
+    } = task;
+    return {
+      _id,
+      title,
+      subtitle,
+      description,
+      completed,
+      deadline,
+      createdAt,
+    };
+  };
 
   async get(param: QueryDto, userId: Types.ObjectId) {
     const { limit, page, tabKey, sortField, sortOrder, search } = param;
@@ -72,72 +93,37 @@ export class TaskService {
   }
 
   async create(data: CreateTaskDto, userId: Types.ObjectId) {
-    const { title, subtitle, description, completed, deadline } = data;
     const doc = new this.taskModel({
-      title,
-      subtitle,
-      description,
-      completed,
-      deadline,
+      ...data,
       author: userId,
     });
     const task = await doc.save();
     if (!task) {
       throw new HttpException("Can't create task", HttpStatus.FORBIDDEN);
     }
-    const { _id, createdAt } = task;
     const message = 'Task successfully created';
 
-    return {
-      _id,
-      title,
-      subtitle,
-      description,
-      completed,
-      deadline,
-      createdAt,
-      message,
-    };
+    return { ...this.taskFields(task), message };
   }
 
-  async update(data: TaskDto, userId: Types.ObjectId) {
-    const { title, subtitle, description, _id, completed, deadline } = data;
-
+  async update(data: UpdateTaskDto, userId: Types.ObjectId) {
     const updatedTask = await this.taskModel.findOneAndUpdate(
-      { _id, author: userId },
-      {
-        $set: {
-          title,
-          subtitle,
-          description,
-          completed,
-          deadline,
-        },
-      },
+      { _id: data._id, author: userId },
+      { $set: data },
       { returnDocument: 'after' },
     );
     if (!updatedTask) {
-      throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
+      throw new HttpException("Can't update task", HttpStatus.FORBIDDEN);
     }
-    const { createdAt } = updatedTask;
     const message = 'Task successfully updated';
 
-    return {
-      _id,
-      title,
-      subtitle,
-      description,
-      completed,
-      deadline,
-      createdAt,
-      message,
-    };
+    return { ...this.taskFields(updatedTask), message };
   }
 
   async delete(_id: string, userId: Types.ObjectId) {
     const taskStatus = await this.taskModel.deleteOne({ _id, author: userId });
     if (!taskStatus.deletedCount) {
-      throw new HttpException('Deleted forbidden', HttpStatus.FORBIDDEN);
+      throw new HttpException("Can't delete task", HttpStatus.FORBIDDEN);
     }
     const message = 'Task successfully deleted';
 

@@ -1,5 +1,4 @@
-import { Schema, Types } from 'mongoose';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { TaskDto } from './task.dto';
 
@@ -17,28 +16,7 @@ export class GetTaskResponse {
   readonly tasks: Array<TaskDto>;
 }
 
-export class CreateTaskResponse {
-  @ApiProperty()
-  readonly _id: Types.ObjectId;
-
-  @ApiProperty()
-  readonly title: string;
-
-  @ApiPropertyOptional()
-  readonly subtitle?: string;
-
-  @ApiPropertyOptional()
-  readonly description?: string;
-
-  @ApiPropertyOptional()
-  readonly deadline?: Schema.Types.Date;
-
-  @ApiProperty()
-  readonly createdAt: Schema.Types.Date;
-
-  @ApiProperty()
-  readonly completed: boolean;
-
+export class CreateTaskResponse extends TaskDto {
   @ApiProperty()
   readonly message: string;
 }

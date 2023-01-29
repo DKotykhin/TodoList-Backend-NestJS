@@ -13,7 +13,7 @@ import {
 import { AuthGuard } from 'src/auth/auth.guard';
 import { TaskService } from './task.service';
 import { QueryDto } from './dto/query.dto';
-import { CreateTaskDto, TaskDto } from './dto/task.dto';
+import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
 import {
   CreateTaskResponse,
   DeleteTaskResponse,
@@ -66,7 +66,7 @@ export class TaskController {
   @Patch()
   async update(
     @Req() req: RequestDto,
-    @Body() updateTask: TaskDto,
+    @Body() updateTask: UpdateTaskDto,
   ): Promise<CreateTaskResponse> {
     return this.taskService.update(updateTask, req.userId._id);
   }

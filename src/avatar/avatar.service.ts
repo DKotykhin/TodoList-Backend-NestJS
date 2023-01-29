@@ -6,12 +6,21 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { User, UserDocument } from 'src/user/schema/user.schema';
+import { UserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
 export class AvatarService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
+
+  private userFields = (user: UserDto) => {
+    if (!user) {
+      throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
+    }
+    const { _id, email, name, createdAt, avatarURL } = user;
+    return { _id, email, name, createdAt, avatarURL };
+  };
 
   async createAvatar(_id: Types.ObjectId, avatar: any) {
     try {
@@ -27,13 +36,9 @@ export class AvatarService {
         { avatarURL },
         { returnDocument: 'after' },
       );
-      if (!updatedUser) {
-        throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
-      }
-      const { email, name, createdAt } = updatedUser;
       const message = 'Avatar successfully created';
 
-      return { _id, name, email, createdAt, avatarURL, message };
+      return { ...this.userFields(updatedUser), message };
     } catch (err) {
       throw new HttpException("Can't create avatar", HttpStatus.FORBIDDEN);
     }
@@ -48,15 +53,11 @@ export class AvatarService {
     });
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id },
-      { avatarURL: '' },
+      { $unset: { avatarURL: '' } },
       { returnDocument: 'after' },
     );
-    if (!updatedUser) {
-      throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
-    }
-    const { email, name, createdAt, avatarURL } = updatedUser;
     const message = 'Avatar successfully deleted';
 
-    return { _id, name, email, createdAt, avatarURL, message };
+    return { ...this.userFields(updatedUser), message };
   }
 }
