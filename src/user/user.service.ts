@@ -122,4 +122,33 @@ export class UserService {
 
     return { userStatus, taskStatus, message };
   }
+
+  async statistic(_id: Types.ObjectId) {
+    const totalTasks = this.taskModel.countDocuments({ author: _id });
+    const completedTasks = this.taskModel.countDocuments({
+      author: _id,
+      completed: true,
+    });
+    const nowDate = new Date().toISOString();
+    const overdueTasks = this.taskModel.countDocuments({
+      author: _id,
+      deadline: { $lt: nowDate },
+      completed: false,
+    });
+    const values = Promise.all([totalTasks, completedTasks, overdueTasks]).then(
+      (values) => {
+        const activeTasks = values[0] - values[1];
+        const message = 'Task statistic successfully obtained';
+        return {
+          totalTasks: values[0],
+          completedTasks: values[1],
+          activeTasks,
+          overdueTasks: values[2],
+          message,
+        };
+      },
+    );
+
+    return values;
+  }
 }

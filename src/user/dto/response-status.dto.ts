@@ -14,3 +14,11 @@ export class DeleteUserResponse {
   };
   message: string;
 }
+
+export class TaskStatisticResponse {
+  totalTasks: number;
+  completedTasks: number;
+  activeTasks: number;
+  overdueTasks: number;
+  message: string;
+}

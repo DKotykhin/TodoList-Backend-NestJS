@@ -24,6 +24,7 @@ import { UserResponse } from './dto/user.dto';
 import {
   ConfirmPasswordResponse,
   DeleteUserResponse,
+  TaskStatisticResponse,
 } from './dto/response-status.dto';
 import { RequestDto } from './dto/request.dto';
 
@@ -100,5 +101,15 @@ export class UserController {
   @Delete('/me')
   async deleteUser(@Req() req: RequestDto): Promise<DeleteUserResponse> {
     return this.userService.deleteUser(req.userId._id);
+  }
+
+  @ApiOperation({ summary: 'Get task statistic' })
+  @ApiOkResponse({
+    type: TaskStatisticResponse,
+    description: 'Task statistic successfully obtained',
+  })
+  @Get('/statistic')
+  async getStatistic(@Req() req: RequestDto): Promise<TaskStatisticResponse> {
+    return this.userService.statistic(req.userId._id);
   }
 }
