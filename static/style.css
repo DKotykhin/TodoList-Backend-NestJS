@@ -18,3 +18,18 @@ body {
     font-size: 25px;
     font-weight: 700;
 }
+.text {
+    margin: 50px 0 20px;
+    color: #5a5a5a;
+    font-size: 20px;
+}
+.link {
+    margin: 10px;
+}
+.link a {
+    font-size: 16px;
+    text-decoration: none;
+}
+.link a:hover {
+    text-decoration: underline;
+}
