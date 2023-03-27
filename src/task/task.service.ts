@@ -42,20 +42,23 @@ export class TaskService {
     const parsePage = parseInt(page);
     const pageNumber = parsePage > 0 ? parsePage : 1;
 
-    const parseSortField =
-      sortField === 'createdAt'
-        ? sortField
-        : sortField === 'deadline'
-        ? sortField
-        : sortField === 'title'
-        ? sortField
-        : 'createdAt';
     const parseSortOrder =
       parseInt(sortOrder) === -1 ? -1 : parseInt(sortOrder) === 1 ? 1 : -1;
 
-    const map = new Map();
-    map.set(parseSortField, parseSortOrder);
-    const sortKey = Object.fromEntries(map);
+    let sortKey = {};
+    switch (sortField) {
+      case 'createdAt':
+        sortKey = { [sortField]: parseSortOrder };
+        break;
+      case 'deadline':
+        sortKey = { [sortField]: -parseSortOrder };
+        break;
+      case 'title':
+        sortKey = { [sortField]: -parseSortOrder };
+        break;
+      default:
+        sortKey = { createdAt: -1 };
+    }
 
     let taskFilter = {};
     switch (tabKey) {
@@ -68,6 +71,7 @@ export class TaskService {
       default:
         taskFilter = { author: userId };
     }
+
     if (search)
       taskFilter = { ...taskFilter, title: { $regex: search, $options: 'i' } };
 
