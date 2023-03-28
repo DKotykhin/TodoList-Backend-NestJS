@@ -129,10 +129,9 @@ export class UserService {
       author: _id,
       completed: true,
     });
-    const nowDate = new Date().toISOString();
     const overdueTasks = this.taskModel.countDocuments({
       author: _id,
-      deadline: { $lt: nowDate },
+      deadline: { $lt: new Date() },
       completed: false,
     });
     const values = Promise.all([totalTasks, completedTasks, overdueTasks]).then(
