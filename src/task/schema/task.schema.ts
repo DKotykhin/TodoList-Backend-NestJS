@@ -26,6 +26,9 @@ export class Task {
   @Prop()
   createdAt: MongooseSchema.Types.Date;
 
+  @Prop()
+  updatedAt: MongooseSchema.Types.Date;
+
   @Prop({ required: true, ref: 'User' })
   author: MongooseSchema.Types.ObjectId;
 }

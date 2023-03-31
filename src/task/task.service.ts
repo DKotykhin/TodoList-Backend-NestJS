@@ -21,6 +21,7 @@ export class TaskService {
       completed,
       deadline,
       createdAt,
+      updatedAt,
     } = task;
     return {
       _id,
@@ -30,6 +31,7 @@ export class TaskService {
       completed,
       deadline,
       createdAt,
+      updatedAt,
     };
   };
 
@@ -86,14 +88,7 @@ export class TaskService {
     const totalPagesQty = Math.ceil(totalTasksQty / tasksOnPage);
 
     const tasks = await this.taskModel
-      .find(taskFilter, {
-        title: true,
-        subtitle: true,
-        description: true,
-        completed: true,
-        createdAt: true,
-        deadline: true,
-      })
+      .find(taskFilter, { author: false })
       .sort(sortKey)
       .limit(tasksOnPage)
       .skip((pageNumber - 1) * tasksOnPage);
@@ -121,7 +116,7 @@ export class TaskService {
     const updatedTask = await this.taskModel.findOneAndUpdate(
       { _id: data._id, author: userId },
       { $set: data },
-      { returnDocument: 'after' },
+      { returnDocument: 'after', fields: { author: false } },
     );
     if (!updatedTask) {
       throw new HttpException("Can't update task", HttpStatus.FORBIDDEN);
