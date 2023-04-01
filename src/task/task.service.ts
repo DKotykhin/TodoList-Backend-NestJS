@@ -22,6 +22,7 @@ export class TaskService {
       deadline,
       createdAt,
       updatedAt,
+      completedAt,
     } = task;
     return {
       _id,
@@ -32,6 +33,7 @@ export class TaskService {
       deadline,
       createdAt,
       updatedAt,
+      completedAt,
     };
   };
 
@@ -113,9 +115,22 @@ export class TaskService {
   }
 
   async update(data: UpdateTaskDto, userId: Types.ObjectId) {
+    const { title, subtitle, description, _id, completed, deadline } = data;
+
+    let completedAt = null;
+    if (completed) completedAt = new Date();
     const updatedTask = await this.taskModel.findOneAndUpdate(
-      { _id: data._id, author: userId },
-      { $set: data },
+      { _id, author: userId },
+      {
+        $set: {
+          title,
+          subtitle,
+          description,
+          completed,
+          deadline,
+          completedAt,
+        },
+      },
       { returnDocument: 'after', fields: { author: false } },
     );
     if (!updatedTask) {

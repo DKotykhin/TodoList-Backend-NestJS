@@ -34,4 +34,7 @@ export class TaskDto extends UpdateTaskDto {
 
   @ApiProperty()
   readonly updatedAt: Schema.Types.Date;
+
+  @ApiPropertyOptional()
+  readonly completedAt: Schema.Types.Date;
 }

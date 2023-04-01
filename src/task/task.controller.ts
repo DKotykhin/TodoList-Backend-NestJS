@@ -50,7 +50,7 @@ export class TaskController {
   })
   @ApiForbiddenResponse({ description: "Can't create task" })
   @Post()
-  async creare(
+  async create(
     @Req() req: RequestDto,
     @Body() createTask: CreateTaskDto,
   ): Promise<CreateTaskResponse> {
