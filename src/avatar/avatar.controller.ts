@@ -64,6 +64,6 @@ export class AvatarController {
   @ApiForbiddenResponse({ description: "Can't delete avatar" })
   @Delete()
   async deleteAvatar(@Req() req: RequestDto): Promise<UserResponse> {
-    return this.avatarService.delete(req.userId._id);
+    return this.avatarService.deleteAvatar(req.userId._id);
   }
 }

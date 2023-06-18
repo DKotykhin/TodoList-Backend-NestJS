@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TaskModule } from './task/task.module';
 import { AvatarModule } from './avatar/avatar.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -15,11 +16,14 @@ import { AvatarModule } from './avatar/avatar.module';
     AuthModule,
     TaskModule,
     AvatarModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(process.env.MONGO_DB),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
     }),
+    MailModule,
   ],
   controllers: [],
   providers: [],

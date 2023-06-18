@@ -3,6 +3,16 @@ import { HydratedDocument, Schema as Sch } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
+@Schema()
+export class resetPasswordApi {
+  @Prop()
+  token: string;
+
+  @Prop()
+  expire: Sch.Types.Date;
+}
+const resetPasswordSchema = SchemaFactory.createForClass(resetPasswordApi);
+
 @Schema({
   timestamps: true,
   versionKey: false,
@@ -16,6 +26,9 @@ export class User {
 
   @Prop({ required: true })
   passwordHash: string;
+
+  @Prop({ type: resetPasswordSchema, default: {} })
+  resetPassword: typeof resetPasswordSchema;
 
   @Prop()
   avatarURL: string;

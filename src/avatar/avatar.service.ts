@@ -44,7 +44,7 @@ export class AvatarService {
     }
   }
 
-  async delete(_id: Types.ObjectId) {
+  async deleteAvatar(_id: Types.ObjectId) {
     const user = await this.userModel.findById(_id);
     fs.unlink('static' + user.avatarURL, async (err) => {
       if (err) {

@@ -17,6 +17,7 @@ Backend for Todo List application
 -   Static folder
 -   Body validation
 -   File uploads
+-   Restore password via email
 -   Check Auth Guard
 -   Task and User Mongoose models
 -   Error handler
@@ -31,6 +32,8 @@ To run this project, you will need to add the following environment variables to
 `PORT`
 `MONGO_DB` 
 `SECRET_KEY`
+`EMAIL_USER`
+`EMAIL_PASS`
 
 
 ## Deploy on Heroku
