@@ -36,7 +36,7 @@ export class MailService {
     const token = buffer.toString('hex');
     const url = `https://mytodolist.fun/auth/reset/${token}`;
 
-    let status: { response: string };
+    let status: { response: string; accepted: string };
     try {
       status = await this.mailerService.sendMail({
         to: email,
@@ -65,7 +65,10 @@ export class MailService {
     if (!updatedUser) {
       throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
     }
-    return status.response;
+    return {
+      status: status.response,
+      message: `Email successfully sent to ${status.accepted}`,
+    };
   }
 
   async setNewPassword(body: NewPasswordDto) {
