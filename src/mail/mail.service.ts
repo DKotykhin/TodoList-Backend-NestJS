@@ -36,24 +36,6 @@ export class MailService {
     const token = buffer.toString('hex');
     const url = `https://mytodolist.fun/auth/reset/${token}`;
 
-    let status: { response: string; accepted: string };
-    try {
-      status = await this.mailerService.sendMail({
-        to: email,
-        subject: 'Restore password',
-        text: 'Please, follow the link to set new password',
-        template: './password',
-        context: {
-          name: user.name,
-          url,
-        },
-      });
-    } catch (err) {
-      throw new HttpException(
-        err.message || "Can't send mail",
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
     const updatedUser = await this.userModel.findOneAndUpdate(
       { email },
       {
@@ -65,10 +47,30 @@ export class MailService {
     if (!updatedUser) {
       throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
     }
-    return {
-      status: status.response,
-      message: `Email successfully sent to ${status.accepted}`,
-    };
+
+    return this.mailerService
+      .sendMail({
+        to: email,
+        subject: 'Restore password',
+        text: 'Please, follow the link to set new password',
+        template: './password',
+        context: {
+          name: user.name,
+          url,
+        },
+      })
+      .then((status) => {
+        return {
+          status: status.response,
+          message: `Email successfully sent to ${status.accepted}`,
+        };
+      })
+      .catch((err) => {
+        throw new HttpException(
+          err.message || "Can't send mail",
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      });
   }
 
   async setNewPassword(body: NewPasswordDto) {

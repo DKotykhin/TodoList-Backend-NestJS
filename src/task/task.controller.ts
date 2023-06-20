@@ -50,7 +50,7 @@ export class TaskController {
   })
   @ApiForbiddenResponse({ description: "Can't create task" })
   @Post()
-  async create(
+  async createTask(
     @Req() req: RequestDto,
     @Body() createTask: CreateTaskDto,
   ): Promise<CreateTaskResponse> {
@@ -64,7 +64,7 @@ export class TaskController {
   })
   @ApiForbiddenResponse({ description: "Can't update task" })
   @Patch()
-  async update(
+  async updateTask(
     @Req() req: RequestDto,
     @Body() updateTask: UpdateTaskDto,
   ): Promise<CreateTaskResponse> {
@@ -78,7 +78,7 @@ export class TaskController {
   })
   @ApiForbiddenResponse({ description: "Can't delete task" })
   @Delete()
-  async delete(
+  async deleteTask(
     @Req() req: RequestDto,
     @Body('_id') _id: string,
   ): Promise<DeleteTaskResponse> {

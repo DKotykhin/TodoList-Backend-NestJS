@@ -1,17 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as Sch } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
-export class resetPasswordApi {
+class resetPasswordData {
   @Prop()
   token: string;
 
   @Prop()
-  expire: Sch.Types.Date;
+  expire: MongooseSchema.Types.Date;
 }
-const resetPasswordSchema = SchemaFactory.createForClass(resetPasswordApi);
+const resetPasswordSchema = SchemaFactory.createForClass(resetPasswordData);
 
 @Schema({
   timestamps: true,
@@ -34,7 +34,7 @@ export class User {
   avatarURL: string;
 
   @Prop()
-  createdAt: Sch.Types.Date;
+  createdAt: MongooseSchema.Types.Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

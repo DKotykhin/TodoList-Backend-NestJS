@@ -21,8 +21,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Create user' })
   @ApiResponse({ status: 201, type: AuthResponse })
   @ApiBadRequestResponse({ description: 'User ${email} already exist' })
-  @Post('/register')
   @HttpCode(HttpStatus.CREATED)
+  @Post('/register')
   register(@Body() registerInput: RegisterDto): Promise<AuthResponse> {
     return this.authService.register(registerInput);
   }
@@ -33,8 +33,8 @@ export class AuthController {
     description: 'User ${name} successfully logged',
   })
   @ApiBadRequestResponse({ description: 'Incorrect login or password' })
-  @Post('/login')
   @HttpCode(HttpStatus.OK)
+  @Post('/login')
   login(@Body() loginInput: LoginDto): Promise<AuthResponse> {
     return this.authService.login(loginInput);
   }

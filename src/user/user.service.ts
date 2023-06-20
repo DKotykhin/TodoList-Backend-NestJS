@@ -71,15 +71,15 @@ export class UserService {
     const user = await this.findUser(_id);
     const isValidPass = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPass) {
-      return {
-        confirmStatus: false,
-        message: 'Wrong password!',
-      };
-    } else
-      return {
-        confirmStatus: true,
-        message: 'Password confirmed',
-      };
+      throw new HttpException(
+        'Wrong password!',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+    return {
+      confirmStatus: true,
+      message: 'Password confirmed',
+    };
   }
 
   async updatePassword(data: { password: string }, _id: Types.ObjectId) {
@@ -90,7 +90,10 @@ export class UserService {
     const user = await this.findUser(_id);
     const isValidPass = await bcrypt.compare(password, user.passwordHash);
     if (isValidPass) {
-      throw new HttpException('The same password!', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'The same password!',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
     const passwordHash = await this.createPasswordHash(password);
 
@@ -112,7 +115,7 @@ export class UserService {
     if (user.avatarURL) {
       fs.unlink('static' + user.avatarURL, async (err) => {
         if (err) {
-          throw new HttpException("Can't delete user", HttpStatus.FORBIDDEN);
+          throw new HttpException("Can't delete avatar", HttpStatus.FORBIDDEN);
         }
       });
     }

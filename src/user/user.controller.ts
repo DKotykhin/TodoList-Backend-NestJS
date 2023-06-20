@@ -7,6 +7,8 @@ import {
   UseGuards,
   Post,
   Req,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -67,6 +69,7 @@ export class UserController {
   })
   @ApiNotFoundResponse({ description: "Can't find user" })
   @ApiBadRequestResponse({ description: 'No data' })
+  @HttpCode(HttpStatus.OK)
   @Post('/password')
   async confirmPassword(
     @Req() req: RequestDto,
