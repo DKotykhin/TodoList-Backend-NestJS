@@ -21,14 +21,15 @@ import {
 
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
-import { NameDto, PasswordDto } from './dto/update-user.dto';
+
 import { UserResponse } from './dto/user.dto';
 import {
   ConfirmPasswordResponse,
   DeleteUserResponse,
   TaskStatisticResponse,
-} from './dto/response-status.dto';
+} from './dto/user-response.dto';
 import { RequestDto } from './dto/request.dto';
+import { PasswordDto, RegisterDto } from 'src/auth/dto/user-auth.dto';
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)
@@ -57,7 +58,7 @@ export class UserController {
   @Patch('/name')
   async updateName(
     @Req() req: RequestDto,
-    @Body() updateName: NameDto,
+    @Body() updateName: Pick<RegisterDto, 'name'>,
   ): Promise<UserResponse> {
     return this.userService.updateName(updateName, req.userId._id);
   }

@@ -18,7 +18,7 @@ import {
   CreateTaskResponse,
   DeleteTaskResponse,
   GetTaskResponse,
-} from './dto/response-task.dto';
+} from './dto/task-response.dto';
 import { RequestDto } from 'src/user/dto/request.dto';
 import {
   ApiForbiddenResponse,
