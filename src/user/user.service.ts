@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import * as bcrypt from 'bcryptjs';
 import * as fs from 'fs';
 
-import { User, UserDocument } from './schema/user.schema';
+import { PasswordHash } from 'src/utils/passwordHash.util';
 import { Task, TaskDocument } from 'src/task/schema/task.schema';
+import { User, UserDocument } from './schema/user.schema';
 import { UserDto } from './dto/user.dto';
 
 @Injectable()
@@ -14,12 +14,6 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>,
   ) {}
-
-  private createPasswordHash = async (password: string) => {
-    const salt = await bcrypt.genSalt(5);
-    const passwordHash = await bcrypt.hash(password, salt);
-    return passwordHash;
-  };
 
   private findUser = async (_id: Types.ObjectId) => {
     const user = await this.userModel.findById(_id);
@@ -69,13 +63,7 @@ export class UserService {
     }
     const { password } = data;
     const user = await this.findUser(_id);
-    const isValidPass = await bcrypt.compare(password, user.passwordHash);
-    if (!isValidPass) {
-      throw new HttpException(
-        'Wrong password!',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
+    await PasswordHash.compare(password, user.passwordHash, 'Wrong password!');
     return {
       confirmStatus: true,
       message: 'Password confirmed',
@@ -88,14 +76,9 @@ export class UserService {
     }
     const { password } = data;
     const user = await this.findUser(_id);
-    const isValidPass = await bcrypt.compare(password, user.passwordHash);
-    if (isValidPass) {
-      throw new HttpException(
-        'The same password!',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
-    const passwordHash = await this.createPasswordHash(password);
+    await PasswordHash.same(password, user.passwordHash, 'The same password!');
+
+    const passwordHash = await PasswordHash.create(password);
 
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id },

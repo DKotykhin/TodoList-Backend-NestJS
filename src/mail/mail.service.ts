@@ -7,7 +7,7 @@ import { User, UserDocument } from 'src/user/schema/user.schema';
 import { NewPasswordDto } from './dto/mail.dto';
 
 import * as crypto from 'crypto';
-import * as bcrypt from 'bcryptjs';
+import { PasswordHash } from 'src/utils/passwordHash.util';
 
 @Injectable()
 export class MailService {
@@ -15,12 +15,6 @@ export class MailService {
     private mailerService: MailerService,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
-
-  private createPasswordHash = async (password: string) => {
-    const salt = await bcrypt.genSalt(5);
-    const passwordHash = await bcrypt.hash(password, salt);
-    return passwordHash;
-  };
 
   async resetUserPassword({ email }) {
     const user = await this.userModel.findOne({ email });
@@ -75,7 +69,7 @@ export class MailService {
 
   async setNewPassword(body: NewPasswordDto) {
     const { token, password } = body;
-    const passwordHash = await this.createPasswordHash(password);
+    const passwordHash = await PasswordHash.create(password);
     const updatedUser = await this.userModel.findOneAndUpdate(
       {
         'resetPassword.token': token,

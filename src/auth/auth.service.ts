@@ -2,11 +2,11 @@ import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcryptjs';
 
 import { LoginDto } from './dto/login-user.dto';
 import { RegisterDto } from './dto/register-user.dto';
 import { User, UserDocument } from '../user/schema/user.schema';
+import { PasswordHash } from 'src/utils/passwordHash.util';
 
 @Injectable()
 export class AuthService {
@@ -14,12 +14,6 @@ export class AuthService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private jwtService: JwtService,
   ) {}
-
-  private createPasswordHash = async (password: string) => {
-    const salt = await bcrypt.genSalt(5);
-    const passwordHash = await bcrypt.hash(password, salt);
-    return passwordHash;
-  };
 
   async register(registerInput: RegisterDto) {
     const { email, name, password } = registerInput;
@@ -30,7 +24,7 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const passwordHash = await this.createPasswordHash(password);
+    const passwordHash = await PasswordHash.create(password);
     const user = await this.userModel.create({
       email,
       passwordHash,
@@ -52,13 +46,11 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const isValidPass = await bcrypt.compare(password, user.passwordHash);
-    if (!isValidPass) {
-      throw new HttpException(
-        'Incorrect login or password',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    await PasswordHash.compare(
+      password,
+      user.passwordHash,
+      'Incorrect login or password',
+    );
     const token = this.jwtService.sign({ _id: user._id });
     const { _id, createdAt, name, avatarURL } = user;
     const message = `User ${name} successfully logged`;

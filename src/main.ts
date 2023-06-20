@@ -8,7 +8,7 @@ async function bootstrap() {
   const PORT = process.env.PORT || 3001;
   const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api');
+  // app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('Todolist backend')
     .setDescription('Todolist API description')
