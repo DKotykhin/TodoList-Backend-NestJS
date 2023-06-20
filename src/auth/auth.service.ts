@@ -12,7 +12,7 @@ import { PasswordHash } from 'src/utils/passwordHash.util';
 export class AuthService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async register(registerInput: RegisterDto) {

@@ -13,8 +13,8 @@ import { tokenConfig } from 'src/configs/token.config';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: tokenConfig,
       inject: [ConfigService],
+      useFactory: tokenConfig,
     }),
   ],
   controllers: [AuthController],

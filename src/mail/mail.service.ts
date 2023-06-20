@@ -35,6 +35,7 @@ export class MailService {
       {
         'resetPassword.token': token,
         'resetPassword.expire': Date.now() + 3600 * 1000,
+        'resetPassword.changed': Date.now(),
       },
       { new: true },
     );
@@ -78,7 +79,9 @@ export class MailService {
       {
         $set: {
           passwordHash,
-          'resetPassword.token': '',
+          'resetPassword.token': null,
+          'resetPassword.expire': null,
+          'resetPassword.changed': Date.now(),
         },
       },
       { new: true },

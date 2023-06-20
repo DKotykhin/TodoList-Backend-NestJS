@@ -10,6 +10,9 @@ class resetPasswordData {
 
   @Prop()
   expire: MongooseSchema.Types.Date;
+
+  @Prop()
+  changed: MongooseSchema.Types.Date;
 }
 const resetPasswordSchema = SchemaFactory.createForClass(resetPasswordData);
 
