@@ -22,14 +22,14 @@ import {
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
 
-import { UserResponse } from './dto/user.dto';
 import {
   ConfirmPasswordResponse,
   DeleteUserResponse,
+  UserResponseDto,
   TaskStatisticResponse,
 } from './dto/user-response.dto';
 import { RequestDto } from './dto/request.dto';
-import { PasswordDto, RegisterDto } from 'src/auth/dto/user-auth.dto';
+import { PasswordDto, RegisterDto } from 'src/auth/dto/auth.dto';
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)
@@ -39,18 +39,18 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get user by token' })
   @ApiOkResponse({
-    type: UserResponse,
+    type: UserResponseDto,
     description: 'User ${user.name} successfully logged by token',
   })
   @ApiNotFoundResponse({ description: "Can't find user" })
   @Get('/me')
-  async getUserByToken(@Req() req: RequestDto): Promise<UserResponse> {
+  async getUserByToken(@Req() req: RequestDto): Promise<UserResponseDto> {
     return this.userService.getUserByToken(req.userId._id);
   }
 
   @ApiOperation({ summary: 'Update user name' })
   @ApiOkResponse({
-    type: UserResponse,
+    type: UserResponseDto,
     description: 'User ${name} successfully updated',
   })
   @ApiNotFoundResponse({ description: "Can't find user" })
@@ -59,7 +59,7 @@ export class UserController {
   async updateName(
     @Req() req: RequestDto,
     @Body() updateName: Pick<RegisterDto, 'name'>,
-  ): Promise<UserResponse> {
+  ): Promise<UserResponseDto> {
     return this.userService.updateName(updateName, req.userId._id);
   }
 
@@ -81,7 +81,7 @@ export class UserController {
 
   @ApiOperation({ summary: 'Update user password' })
   @ApiOkResponse({
-    type: UserResponse,
+    type: UserResponseDto,
     description: 'User ${name} successfully updated',
   })
   @ApiNotFoundResponse({ description: "Can't find user" })
@@ -91,7 +91,7 @@ export class UserController {
   async updatePassword(
     @Req() req: RequestDto,
     @Body() updatePassword: PasswordDto,
-  ): Promise<UserResponse> {
+  ): Promise<UserResponseDto> {
     return this.userService.updatePassword(updatePassword, req.userId._id);
   }
 

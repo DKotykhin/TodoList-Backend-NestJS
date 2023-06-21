@@ -1,16 +1,31 @@
 import { Body, Patch, Post } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 
-import { MailService } from './mail.service';
-import { NewPasswordDto } from './dto/mail.dto';
-import { UserDto } from 'src/user/dto/user.dto';
-import { ResponseDto } from './dto/mail-response.dto';
-import { LoginDto } from 'src/auth/dto/user-auth.dto';
+import {
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
+import { MailService } from './mail.service';
+
+import { UserResponseDto } from 'src/user/dto/user-response.dto';
+import { LoginDto } from 'src/auth/dto/auth.dto';
+import { NewPasswordDto } from './dto/mail.dto';
+import { ResponseDto } from './dto/mail-response.dto';
+
+@ApiTags('Mail')
 @Controller('mail')
 export class MailController {
   constructor(private readonly mailService: MailService) {}
 
+  @ApiOperation({ summary: 'Reset user password' })
+  @ApiOkResponse({
+    type: ResponseDto,
+    description: 'Email successfully sent to user',
+  })
+  @ApiForbiddenResponse({ description: 'Modified forbidden' })
   @Post('/reset')
   async resetUserPassword(
     @Body() email: Pick<LoginDto, 'email'>,
@@ -18,8 +33,14 @@ export class MailController {
     return this.mailService.resetUserPassword(email);
   }
 
+  @ApiOperation({ summary: 'Set new password' })
+  @ApiOkResponse({
+    type: UserResponseDto,
+    description: 'Successfylly set new password',
+  })
+  @ApiForbiddenResponse({ description: "Can't set new password" })
   @Patch('/reset')
-  async setNewPassword(@Body() body: NewPasswordDto): Promise<UserDto> {
+  async setNewPassword(@Body() body: NewPasswordDto): Promise<UserResponseDto> {
     return this.mailService.setNewPassword(body);
   }
 }

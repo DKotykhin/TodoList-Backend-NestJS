@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { TaskDto } from './task.dto';
+import { DeletedStatus } from 'src/user/dto/user-response.dto';
 
 export class GetTaskResponse {
   @ApiProperty()
@@ -23,10 +24,7 @@ export class CreateTaskResponse extends TaskDto {
 
 export class DeleteTaskResponse {
   @ApiProperty()
-  readonly taskStatus: {
-    acknowledged: boolean;
-    deletedCount: number;
-  };
+  readonly taskStatus: DeletedStatus;
   @ApiProperty()
   readonly message: string;
 }

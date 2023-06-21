@@ -20,10 +20,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { AuthGuard } from 'src/auth/auth.guard';
-import { RequestDto } from 'src/user/dto/request.dto';
-import { UserResponse } from 'src/user/dto/user.dto';
 import { AvatarService } from './avatar.service';
+import { AuthGuard } from 'src/auth/auth.guard';
+
+import { RequestDto } from 'src/user/dto/request.dto';
+import { UserResponseDto } from 'src/user/dto/user-response.dto';
 
 @ApiTags('Avatar')
 @UseGuards(AuthGuard)
@@ -33,7 +34,7 @@ export class AvatarController {
 
   @ApiOperation({ summary: 'Create avatar' })
   @ApiOkResponse({
-    type: UserResponse,
+    type: UserResponseDto,
     description: 'Avatar successfully created',
   })
   @ApiForbiddenResponse({ description: "Can't create avatar" })
@@ -52,18 +53,18 @@ export class AvatarController {
       }),
     )
     avatar: Express.Multer.File,
-  ): Promise<UserResponse> {
+  ): Promise<UserResponseDto> {
     return this.avatarService.createAvatar(req.userId._id, avatar);
   }
 
   @ApiOperation({ summary: 'Delete avatar' })
   @ApiOkResponse({
-    type: UserResponse,
+    type: UserResponseDto,
     description: 'Avatar successfully deleted',
   })
   @ApiForbiddenResponse({ description: "Can't delete avatar" })
   @Delete()
-  async deleteAvatar(@Req() req: RequestDto): Promise<UserResponse> {
+  async deleteAvatar(@Req() req: RequestDto): Promise<UserResponseDto> {
     return this.avatarService.deleteAvatar(req.userId._id);
   }
 }

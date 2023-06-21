@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEmail, Length } from 'class-validator';
 
-import { UserResponse } from 'src/user/dto/user.dto';
-
 export class PasswordDto {
   @ApiProperty({ minItems: 8, example: '12345678' })
   @IsString()
@@ -21,9 +19,4 @@ export class RegisterDto extends LoginDto {
   @IsString()
   @Length(2, 100)
   readonly name: string;
-}
-
-export class AuthResponseDto extends UserResponse {
-  @ApiProperty()
-  readonly token: string;
 }

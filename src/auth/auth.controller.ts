@@ -9,7 +9,8 @@ import {
 
 import { AuthService } from './auth.service';
 
-import { LoginDto, RegisterDto, AuthResponseDto } from './dto/user-auth.dto';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { AuthResponseDto } from './dto/auth-response.dto';
 
 @ApiTags('Authification')
 @Controller('auth')

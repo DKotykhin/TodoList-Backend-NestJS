@@ -87,7 +87,11 @@ export class MailService {
       { new: true },
     );
     if (!updatedUser) {
-      throw new HttpException('Modified forbidden', HttpStatus.FORBIDDEN);
-    } else return updatedUser;
+      throw new HttpException("Can't set new password", HttpStatus.FORBIDDEN);
+    } else
+      return {
+        ...updatedUser,
+        message: 'Successfylly set new password',
+      };
   }
 }
