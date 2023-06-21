@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TaskDto } from './task.dto';
 import { DeletedStatus } from 'src/user/dto/user-response.dto';
 
-export class GetTaskResponse {
+export class GetTasksResponse {
   @ApiProperty()
   readonly totalTasksQty: number;
 
@@ -17,7 +17,10 @@ export class GetTaskResponse {
   readonly tasks: Array<TaskDto>;
 }
 
-export class CreateTaskResponse extends TaskDto {
+export class TaskResponse {
+  @ApiProperty()
+  readonly task: TaskDto;
+
   @ApiProperty()
   readonly message: string;
 }

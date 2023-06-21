@@ -83,7 +83,7 @@ export class UserService {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id },
       { passwordHash },
-      { returnDocument: 'after' },
+      { new: true },
     );
     if (!updatedUser) {
       throw new HttpException("Can't update password", HttpStatus.FORBIDDEN);

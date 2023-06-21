@@ -4,38 +4,13 @@ import { Model, Types } from 'mongoose';
 
 import { Task, TaskDocument } from './schema/task.schema';
 import { QueryDto } from './dto/query.dto';
-import { CreateTaskDto, TaskDto, UpdateTaskDto } from './dto/task.dto';
+import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>,
   ) {}
-
-  private taskFields = (task: TaskDto) => {
-    const {
-      _id,
-      title,
-      subtitle,
-      description,
-      completed,
-      deadline,
-      createdAt,
-      updatedAt,
-      completedAt,
-    } = task;
-    return {
-      _id,
-      title,
-      subtitle,
-      description,
-      completed,
-      deadline,
-      createdAt,
-      updatedAt,
-      completedAt,
-    };
-  };
 
   async get(param: QueryDto, userId: Types.ObjectId) {
     const { limit, page, tabKey, sortField, sortOrder, search } = param;
@@ -111,7 +86,7 @@ export class TaskService {
     }
     const message = 'Task successfully created';
 
-    return { ...this.taskFields(task), message };
+    return { task, message };
   }
 
   async update(data: UpdateTaskDto, userId: Types.ObjectId) {
@@ -119,7 +94,7 @@ export class TaskService {
 
     let completedAt = null;
     if (completed) completedAt = new Date();
-    const updatedTask = await this.taskModel.findOneAndUpdate(
+    const task = await this.taskModel.findOneAndUpdate(
       { _id, author: userId },
       {
         $set: {
@@ -131,14 +106,14 @@ export class TaskService {
           completedAt,
         },
       },
-      { returnDocument: 'after', fields: { author: false } },
+      { new: true, fields: { author: false } },
     );
-    if (!updatedTask) {
+    if (!task) {
       throw new HttpException("Can't update task", HttpStatus.FORBIDDEN);
     }
     const message = 'Task successfully updated';
 
-    return { ...this.taskFields(updatedTask), message };
+    return { task, message };
   }
 
   async delete(_id: string, userId: Types.ObjectId) {

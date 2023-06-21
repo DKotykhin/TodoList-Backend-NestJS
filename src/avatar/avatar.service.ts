@@ -54,7 +54,7 @@ export class AvatarService {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id },
       { $unset: { avatarURL: '' } },
-      { returnDocument: 'after' },
+      { new: true },
     );
     const message = 'Avatar successfully deleted';
 

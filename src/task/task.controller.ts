@@ -15,9 +15,9 @@ import { TaskService } from './task.service';
 import { QueryDto } from './dto/query.dto';
 import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
 import {
-  CreateTaskResponse,
+  TaskResponse,
   DeleteTaskResponse,
-  GetTaskResponse,
+  GetTasksResponse,
 } from './dto/task-response.dto';
 import { RequestDto } from 'src/user/dto/request.dto';
 import {
@@ -34,18 +34,18 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @ApiOperation({ summary: 'Get all task' })
-  @ApiOkResponse({ type: GetTaskResponse })
+  @ApiOkResponse({ type: GetTasksResponse })
   @Get()
   async getTask(
     @Req() req: RequestDto,
     @Query() query: QueryDto,
-  ): Promise<GetTaskResponse> {
+  ): Promise<GetTasksResponse> {
     return this.taskService.get(query, req.userId._id);
   }
 
   @ApiOperation({ summary: 'Create task' })
   @ApiOkResponse({
-    type: CreateTaskResponse,
+    type: TaskResponse,
     description: 'Task successfully created',
   })
   @ApiForbiddenResponse({ description: "Can't create task" })
@@ -53,13 +53,13 @@ export class TaskController {
   async createTask(
     @Req() req: RequestDto,
     @Body() createTask: CreateTaskDto,
-  ): Promise<CreateTaskResponse> {
+  ): Promise<TaskResponse> {
     return this.taskService.create(createTask, req.userId._id);
   }
 
   @ApiOperation({ summary: 'Update task' })
   @ApiOkResponse({
-    type: CreateTaskResponse,
+    type: TaskResponse,
     description: 'Task successfully updted',
   })
   @ApiForbiddenResponse({ description: "Can't update task" })
@@ -67,7 +67,7 @@ export class TaskController {
   async updateTask(
     @Req() req: RequestDto,
     @Body() updateTask: UpdateTaskDto,
-  ): Promise<CreateTaskResponse> {
+  ): Promise<TaskResponse> {
     return this.taskService.update(updateTask, req.userId._id);
   }
 

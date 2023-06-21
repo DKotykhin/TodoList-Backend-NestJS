@@ -8,7 +8,7 @@ Backend for Todo List application
 
 ## Technologies
 
--   Backend: Node JS, Nest JS, Mongoose, JWT, Bcrypt, Nodemailer, Handlebars
+-   Backend: Node JS, Nest JS, Mongoose, JWT, Bcrypt, Nodemailer, Handlebars, Swagger
 -   Frontend: React, Redux RTK Query, Axios, Typescript, React Hook Form, MUI, Markdown, Tostify, SCSS
 -   Database: Mongo DB
 
@@ -22,7 +22,8 @@ Backend for Todo List application
 -   Task and User Mongoose models
 -   Error handler
 -   Bcrypt for password field
--   Controllers for endpoints
+-   JWT Token
+-   Swagger API Docs
 
 
 ## Environment Variables
