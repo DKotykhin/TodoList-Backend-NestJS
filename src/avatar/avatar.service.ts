@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as sharp from 'sharp';
 
 import { User, UserDocument } from 'src/user/schema/user.schema';
 import { UserDto } from 'src/user/dto/user.dto';
@@ -22,19 +23,20 @@ export class AvatarService {
     return { _id, email, name, createdAt, avatarURL };
   };
 
-  async createAvatar(_id: Types.ObjectId, avatar: any) {
+  async createAvatar(_id: Types.ObjectId, avatar: Express.Multer.File) {
     try {
-      const fileName = _id + '-' + avatar.originalname;
+      const fileName = _id + '-' + avatar.fieldname + '.webp';
       const filePath = 'static/upload';
       const avatarURL = `/upload/${fileName}`;
       if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath, { recursive: true });
       }
-      fs.writeFileSync(path.join(filePath, fileName), avatar.buffer);
+      const file = await sharp(avatar.buffer).webp().resize(200).toBuffer();
+      fs.writeFileSync(path.join(filePath, fileName), file);
       const updatedUser = await this.userModel.findOneAndUpdate(
         { _id },
         { avatarURL },
-        { returnDocument: 'after' },
+        { new: true },
       );
       const message = 'Avatar successfully created';
 

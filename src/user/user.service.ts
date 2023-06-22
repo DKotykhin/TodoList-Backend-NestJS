@@ -110,30 +110,30 @@ export class UserService {
   }
 
   async statistic(_id: Types.ObjectId) {
-    const totalTasks = this.taskModel.countDocuments({ author: _id });
-    const completedTasks = this.taskModel.countDocuments({
-      author: _id,
-      completed: true,
-    });
-    const overdueTasks = this.taskModel.countDocuments({
-      author: _id,
-      deadline: { $lt: new Date() },
-      completed: false,
-    });
-    const values = Promise.all([totalTasks, completedTasks, overdueTasks]).then(
-      (values) => {
-        const activeTasks = values[0] - values[1];
-        const message = 'Task statistic successfully obtained';
-        return {
-          totalTasks: values[0],
-          completedTasks: values[1],
-          activeTasks,
-          overdueTasks: values[2],
-          message,
-        };
-      },
-    );
+    const tasks = await this.taskModel
+      .aggregate()
+      .match({ author: new Types.ObjectId(_id) })
+      .group({
+        _id: '$completed',
+        count: {
+          $sum: 1,
+        },
+        overdue: {
+          $sum: { $cond: [{ $lt: ['$deadline', new Date()] }, 1, 0] },
+        },
+      });
 
-    return values;
+    const activeTasks = tasks?.find((res) => res._id === false).count || 0;
+    const overdueTasks = tasks?.find((res) => res._id === false).overdue || 0;
+    const completedTasks = tasks?.find((res) => res._id === true).count || 0;
+    const message = 'Task statistic successfully obtained';
+
+    return {
+      totalTasks: activeTasks + completedTasks,
+      completedTasks,
+      activeTasks,
+      overdueTasks,
+      message,
+    };
   }
 }
