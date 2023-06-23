@@ -3,10 +3,10 @@ import * as bcrypt from 'bcryptjs';
 import { HttpStatus, HttpException } from '@nestjs/common';
 
 export class PasswordHash {
-  static #index = 5;
+  private static index = 5;
 
   static create = async (password: string) => {
-    const salt = await bcrypt.genSalt(this.#index);
+    const salt = await bcrypt.genSalt(this.index);
     const passwordHash = await bcrypt.hash(password, salt);
     return passwordHash;
   };
