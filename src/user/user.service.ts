@@ -123,9 +123,9 @@ export class UserService {
         },
       });
 
-    const activeTasks = tasks?.find((res) => res._id === false).count || 0;
-    const overdueTasks = tasks?.find((res) => res._id === false).overdue || 0;
-    const completedTasks = tasks?.find((res) => res._id === true).count || 0;
+    const activeTasks = tasks?.find((res) => res._id === false)?.count || 0;
+    const overdueTasks = tasks?.find((res) => res._id === false)?.overdue || 0;
+    const completedTasks = tasks?.find((res) => res._id === true)?.count || 0;
     const message = 'Task statistic successfully obtained';
 
     return {
