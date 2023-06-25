@@ -18,6 +18,7 @@ Backend for Todo List application
 -   Body validation
 -   File uploads
 -   Restore password via email
+-   Resize upload images and change format
 -   Check Auth Guard
 -   Task and User Mongoose models
 -   Error handler
@@ -35,6 +36,7 @@ To run this project, you will need to add the following environment variables to
 `SECRET_KEY`
 `EMAIL_USER`
 `EMAIL_PASS`
+`FRONT_URL`
 
 
 ## Deploy on Heroku

@@ -1,18 +1,21 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
+
+import * as crypto from 'crypto';
 import { Model } from 'mongoose';
 
 import { User, UserDocument } from 'src/user/schema/user.schema';
-import { NewPasswordDto } from './dto/mail.dto';
-
-import * as crypto from 'crypto';
 import { PasswordHash } from 'src/utils/passwordHash.util';
+
+import { NewPasswordDto } from './dto/mail.dto';
 
 @Injectable()
 export class MailService {
   constructor(
     private mailerService: MailerService,
+    private config: ConfigService,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
 
@@ -28,14 +31,13 @@ export class MailService {
         HttpStatus.EXPECTATION_FAILED,
       );
     const token = buffer.toString('hex');
-    const url = `https://mytodolist.fun/auth/reset/${token}`;
+    const url = `${this.config.get('FRONT_URL')}/auth/reset/${token}`;
 
     const updatedUser = await this.userModel.findOneAndUpdate(
       { email },
       {
         'resetPassword.token': token,
         'resetPassword.expire': Date.now() + 3600 * 1000,
-        'resetPassword.changed': Date.now(),
       },
       { new: true },
     );
@@ -90,7 +92,7 @@ export class MailService {
       throw new HttpException("Can't set new password", HttpStatus.FORBIDDEN);
     } else
       return {
-        ...updatedUser,
+        ...updatedUser['_doc'],
         message: 'Successfylly set new password',
       };
   }
