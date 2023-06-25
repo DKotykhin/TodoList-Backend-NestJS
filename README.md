@@ -8,22 +8,24 @@ Backend for Todo List application
 
 ## Technologies
 
--   Backend: Node JS, Nest JS, Mongoose, JWT, Bcrypt, Nodemailer, Handlebars, Swagger
--   Frontend: React, Redux RTK Query, Axios, Typescript, React Hook Form, MUI, Markdown, Tostify, SCSS
+-   Node JS, Nest JS, Typescript, Mongoose, JWT, Bcrypt, Nodemailer, Class Validator, Handlebars, Sharp, Swagger
 -   Database: Mongo DB
 
 ## Features
 
--   Static folder
--   Body validation
--   File uploads
--   Restore password via email
--   Resize upload images and change format
+-   Full CRUD operations for users and tasks
+-   JWT Token for authification
 -   Check Auth Guard
+-   Body validation
+-   File uploads and delete
+-   Resize upload images and change format
+-   Static folder
+-   Restore password via email
 -   Task and User Mongoose models
 -   Error handler
--   Bcrypt for password field
--   JWT Token
+-   Config service for environment variables
+-   Bcrypt for password hash
+-   User and task statistic
 -   Swagger API Docs
 
 
