@@ -3,8 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MailerModule } from '@nestjs-modules/mailer';
 
-import { User, UserSchema } from 'src/user/schema/user.schema';
-import { nodemailerConfig } from 'src/configs/nodemailer.config';
+import { User, UserSchema } from '../user/schema/user.schema';
+import { nodemailerConfig } from '../configs/nodemailer.config';
 import { MailService } from './mail.service';
 import { MailController } from './mail.controller';
 

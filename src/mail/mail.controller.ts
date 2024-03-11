@@ -10,8 +10,8 @@ import {
 
 import { MailService } from './mail.service';
 
-import { UserResponseDto } from 'src/user/dto/user-response.dto';
-import { LoginDto } from 'src/auth/dto/auth.dto';
+import { UserResponseDto } from '../user/dto/user-response.dto';
+import { LoginDto } from '../auth/dto/auth.dto';
 import { NewPasswordDto } from './dto/mail.dto';
 import { ResponseDto } from './dto/mail-response.dto';
 
@@ -36,7 +36,7 @@ export class MailController {
   @ApiOperation({ summary: 'Set new password' })
   @ApiOkResponse({
     type: UserResponseDto,
-    description: 'Successfylly set new password',
+    description: 'Successfully set new password',
   })
   @ApiForbiddenResponse({ description: "Can't set new password" })
   @Patch('/reset')

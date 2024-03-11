@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User, UserSchema } from '../user/schema/user.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { tokenConfig } from 'src/configs/token.config';
+import { tokenConfig } from '../configs/token.config';
 
 @Module({
   imports: [

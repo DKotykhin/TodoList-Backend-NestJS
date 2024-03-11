@@ -11,7 +11,7 @@ export const nodemailerConfig = async (config: ConfigService) => ({
     },
   },
   defaults: {
-    from: '"Todolist" <info@mytodolist.fun>',
+    from: '"TodoList" <info@mytodolist.fun>',
   },
   template: {
     dir: 'src/mail/templates',

@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 
-@ApiTags('Authification')
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

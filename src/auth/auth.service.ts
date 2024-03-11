@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { User, UserDocument } from '../user/schema/user.schema';
-import { PasswordHash } from 'src/utils/passwordHash.util';
+import { PasswordHash } from '../utils/passwordHash.util';
 
 @Injectable()
 export class AuthService {
@@ -16,8 +16,8 @@ export class AuthService {
 
   async register(registerInput: RegisterDto) {
     const { email, name, password } = registerInput;
-    const candidat = await this.userModel.findOne({ email });
-    if (candidat) {
+    const candidate = await this.userModel.findOne({ email });
+    if (candidate) {
       throw new HttpException(
         `User ${email} already exist`,
         HttpStatus.BAD_REQUEST,

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { TaskService } from './task.service';
 import { QueryDto } from './dto/query.dto';
 import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
@@ -19,7 +19,7 @@ import {
   DeleteTaskResponse,
   GetTasksResponse,
 } from './dto/task-response.dto';
-import { RequestDto } from 'src/user/dto/request.dto';
+import { RequestDto } from '../user/dto/request.dto';
 import {
   ApiForbiddenResponse,
   ApiOkResponse,
@@ -60,7 +60,7 @@ export class TaskController {
   @ApiOperation({ summary: 'Update task' })
   @ApiOkResponse({
     type: TaskResponse,
-    description: 'Task successfully updted',
+    description: 'Task successfully updated',
   })
   @ApiForbiddenResponse({ description: "Can't update task" })
   @Patch()

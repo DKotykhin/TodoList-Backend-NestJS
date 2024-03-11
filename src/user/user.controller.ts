@@ -19,7 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { UserService } from './user.service';
 
 import {
@@ -29,7 +29,7 @@ import {
   TaskStatisticResponse,
 } from './dto/user-response.dto';
 import { RequestDto } from './dto/request.dto';
-import { PasswordDto, RegisterDto } from 'src/auth/dto/auth.dto';
+import { PasswordDto, RegisterDto } from '../auth/dto/auth.dto';
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)

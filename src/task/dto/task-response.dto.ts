@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { TaskDto } from './task.dto';
-import { DeletedStatus } from 'src/user/dto/user-response.dto';
+import { DeletedStatus } from '../../user/dto/user-response.dto';
 
 export class GetTasksResponse {
   @ApiProperty()

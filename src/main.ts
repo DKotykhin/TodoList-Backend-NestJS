@@ -10,8 +10,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   // app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
-    .setTitle('Todolist backend')
-    .setDescription('Todolist API description')
+    .setTitle('TodoList backend')
+    .setDescription('TodoList API description')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

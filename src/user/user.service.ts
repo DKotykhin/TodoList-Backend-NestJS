@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import * as fs from 'fs';
 
-import { PasswordHash } from 'src/utils/passwordHash.util';
-import { Task, TaskDocument } from 'src/task/schema/task.schema';
+import { PasswordHash } from '../utils/passwordHash.util';
+import { Task, TaskDocument } from '../task/schema/task.schema';
 import { User, UserDocument } from './schema/user.schema';
 import { UserDto } from './dto/user.dto';
 

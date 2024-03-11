@@ -10,7 +10,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtServise: JwtService) {}
+  constructor(private jwtService: JwtService) {}
 
   canActivate(
     context: ExecutionContext,
@@ -18,11 +18,11 @@ export class AuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     try {
       const token = req.headers.authorization.split(' ')[1];
-      const user = this.jwtServise.verify(token);
+      const user = this.jwtService.verify(token);
       req.userId = user;
       return Boolean(user._id);
     } catch (err) {
-      throw new HttpException('Authorization denyed', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Authorization denied', HttpStatus.UNAUTHORIZED);
     }
   }
 }

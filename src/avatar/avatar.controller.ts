@@ -21,10 +21,10 @@ import {
 } from '@nestjs/swagger';
 
 import { AvatarService } from './avatar.service';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
-import { RequestDto } from 'src/user/dto/request.dto';
-import { UserResponseDto } from 'src/user/dto/user-response.dto';
+import { RequestDto } from '../user/dto/request.dto';
+import { UserResponseDto } from '../user/dto/user-response.dto';
 
 @ApiTags('Avatar')
 @UseGuards(AuthGuard)

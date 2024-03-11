@@ -6,8 +6,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as sharp from 'sharp';
 
-import { User, UserDocument } from 'src/user/schema/user.schema';
-import { UserDto } from 'src/user/dto/user.dto';
+import { User, UserDocument } from '../user/schema/user.schema';
+import { UserDto } from '../user/dto/user.dto';
 
 @Injectable()
 export class AvatarService {

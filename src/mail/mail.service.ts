@@ -6,8 +6,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as crypto from 'crypto';
 import { Model } from 'mongoose';
 
-import { User, UserDocument } from 'src/user/schema/user.schema';
-import { PasswordHash } from 'src/utils/passwordHash.util';
+import { User, UserDocument } from '../user/schema/user.schema';
+import { PasswordHash } from '../utils/passwordHash.util';
 
 import { NewPasswordDto } from './dto/mail.dto';
 
@@ -93,7 +93,7 @@ export class MailService {
     } else
       return {
         ...updatedUser['_doc'],
-        message: 'Successfylly set new password',
+        message: 'Successfully set new password',
       };
   }
 }
