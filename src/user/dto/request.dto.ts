@@ -5,5 +5,5 @@ import { Types } from 'mongoose';
 
 export class RequestDto extends Request {
   @ApiProperty()
-  readonly userId: Types.ObjectId;
+  readonly userId: { _id: Types.ObjectId };
 }

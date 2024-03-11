@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { disconnect } from 'mongoose';
+import * as request from 'supertest';
+
 import { UserModule } from '../src/user/user.module';
 import { AppModule } from '../src/app.module';
-import * as request from 'supertest';
-import { disconnect } from 'mongoose';
 
 const user = {
   name: 'Dmytro',

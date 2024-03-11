@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { disconnect } from 'mongoose';
+import * as request from 'supertest';
+
 import { UserModule } from '../src/user/user.module';
 import { TaskModule } from '../src/task/task.module';
 import { AppModule } from '../src/app.module';
-import * as request from 'supertest';
-import { disconnect } from 'mongoose';
 
 const user = {
   email: 'kotykhin_d@ukr.net',
@@ -57,6 +58,21 @@ describe('User', () => {
         taskId = res.body.task?._id;
       });
   });
+
+  it('Task - get (GET)', async () => {
+    return await request(app.getHttpServer())
+      .get('/task')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .then((res: request.Response) => {
+        expect(res.body).toHaveProperty('totalTasksQty');
+        expect(res.body).toHaveProperty('totalPagesQty');
+        expect(res.body).toHaveProperty('tasksOnPageQty');
+        expect(res.body).toHaveProperty('tasks');
+        expect(res.body.tasks.length).toBeGreaterThanOrEqual(1);
+      });
+  });
+
   it('Task - update (PATCH)', async () => {
     return await request(app.getHttpServer())
       .patch('/task')
