@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { disconnect } from 'mongoose';
 import * as request from 'supertest';
 
@@ -27,6 +27,7 @@ describe('User', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 
@@ -49,6 +50,7 @@ describe('User', () => {
       .post('/task')
       .set('Authorization', `Bearer ${token}`)
       .send(task)
+      .expect('Content-Type', /json/)
       .expect(201)
       .then((res: request.Response) => {
         expect(res.body.task).toHaveProperty('title');
@@ -59,7 +61,26 @@ describe('User', () => {
       });
   });
 
-  it('Task - get (GET)', async () => {
+  it('Task - create (POST) - validation error', async () => {
+    return await request(app.getHttpServer())
+      .post('/task')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'T',
+      })
+      .expect('Content-Type', /json/)
+      .expect(400, {
+        statusCode: 400,
+        message: ['Title must be between 2 and 30 characters'],
+        error: 'Bad Request',
+      });
+    // .then((res: request.Response) => {
+    //   expect(res.body).toHaveProperty('message');
+    //   expect(res.body.error).toBe('Bad Request');
+    // });
+  });
+
+  it('Task - get all (GET)', async () => {
     return await request(app.getHttpServer())
       .get('/task')
       .set('Authorization', `Bearer ${token}`)
@@ -73,11 +94,36 @@ describe('User', () => {
       });
   });
 
+  it('Task - get by id (GET)', async () => {
+    return await request(app.getHttpServer())
+      .get(`/task/${taskId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .then((res: request.Response) => {
+        expect(res.body).toHaveProperty('title');
+        expect(res.body).toHaveProperty('subtitle');
+        expect(res.body).toHaveProperty('description');
+        expect(res.body).toHaveProperty('completed');
+        expect(res.body._id).toBe(taskId);
+      });
+  });
+
+  it('Task - get by id (GET) - not found', async () => {
+    return await request(app.getHttpServer())
+      .get(`/task/1234567890`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(404)
+      .then((res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toBe('Task not found');
+      });
+  });
+
   it('Task - update (PATCH)', async () => {
     return await request(app.getHttpServer())
       .patch('/task')
       .set('Authorization', `Bearer ${token}`)
-      .send({ _id: taskId, completed: true })
+      .send({ _id: taskId, completed: true, ...task })
       .expect(200)
       .then((res: request.Response) => {
         expect(res.body.task?.completed).toBe(true);

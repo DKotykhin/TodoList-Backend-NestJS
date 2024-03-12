@@ -78,4 +78,25 @@ describe('UserService', () => {
       message: 'User Dmytro Kotykhin successfully updated',
     });
   });
+
+  it('should not update user name because not found user', async () => {
+    const userId = new Types.ObjectId();
+    const name = 'Dmytro Kotykhin';
+    mockUserModel.findOneAndUpdate.mockReturnValue(null);
+    try {
+      await service.updateName({ name }, userId);
+    } catch (error) {
+      expect(error.message).toEqual('Modified forbidden');
+    }
+  });
+
+  it('should not update user name because the same name', async () => {
+    const userId = new Types.ObjectId();
+    const name = 'Dmytro';
+    try {
+      await service.updateName({ name }, userId);
+    } catch (error) {
+      expect(error.message).toEqual('The same name!');
+    }
+  });
 });

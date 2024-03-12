@@ -19,7 +19,7 @@ export class AuthService {
     const candidate = await this.userModel.findOne({ email });
     if (candidate) {
       throw new HttpException(
-        `User ${email} already exist`,
+        `User ${email} already exists`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -42,7 +42,7 @@ export class AuthService {
     if (!user) {
       throw new HttpException(
         'Incorrect login or password',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.UNAUTHORIZED,
       );
     }
     await PasswordHash.compare(

@@ -4,7 +4,7 @@ import { IsString, IsEmail, Length } from 'class-validator';
 export class PasswordDto {
   @ApiProperty({ minItems: 8, example: '12345678' })
   @IsString()
-  @Length(8, 100)
+  @Length(8, 100, { message: 'Password must be at least 8 characters' })
   readonly password: string;
 }
 

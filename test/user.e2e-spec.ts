@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { disconnect } from 'mongoose';
 import * as request from 'supertest';
 
@@ -21,6 +21,7 @@ describe('User', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 
@@ -36,6 +37,17 @@ describe('User', () => {
       });
   });
 
+  it('User registration (POST) - Email already exists', async () => {
+    return await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(user)
+      .expect(400)
+      .then((res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toBe(`User ${user.email} already exists`);
+      });
+  });
+
   let token: string;
 
   it('User login (POST)', async () => {
@@ -46,6 +58,28 @@ describe('User', () => {
       .then((res: request.Response) => {
         expect(res.body).toHaveProperty('token');
         token = res.body.token;
+      });
+  });
+
+  it('User login (POST) - Unauthorized', async () => {
+    return await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'kotykhin_dmmm@ukr.net', password: user.password })
+      .expect(401)
+      .then((res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toBe('Incorrect login or password');
+      });
+  });
+
+  it('User login (POST) - Incorrect password', async () => {
+    return await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: user.email, password: '123456789' })
+      .expect(400)
+      .then((res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toBe('Incorrect login or password');
       });
   });
 

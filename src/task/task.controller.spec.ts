@@ -27,6 +27,12 @@ const mockTaskService = {
       message: 'Task successfully deleted',
     };
   }),
+  getTaskById: jest.fn(() => {
+    return {
+      id: 2,
+      ...newTask,
+    };
+  }),
 };
 
 const mockAuthGuard = {
@@ -69,6 +75,38 @@ describe('TaskController', () => {
       id: 1,
       ...newTask,
     });
+  });
+
+  it('should get task by id', async () => {
+    const requestDto: Pick<RequestDto, 'userId'> = {
+      userId: {
+        _id: new Types.ObjectId(),
+      },
+    };
+    const taskId = '1';
+    expect(
+      await controller.getTaskById(requestDto as RequestDto, taskId),
+    ).toEqual({
+      id: 2,
+      ...newTask,
+    });
+  });
+
+  it('should get task by id (error)', async () => {
+    const requestDto: Pick<RequestDto, 'userId'> = {
+      userId: {
+        _id: new Types.ObjectId(),
+      },
+    };
+    const taskId = '1';
+    mockTaskService.getTaskById = jest.fn(() => {
+      throw new Error('Task not found');
+    });
+    try {
+      await controller.getTaskById(requestDto as RequestDto, taskId);
+    } catch (error) {
+      expect(error.message).toEqual('Task not found');
+    }
   });
 
   it('should delete task', async () => {

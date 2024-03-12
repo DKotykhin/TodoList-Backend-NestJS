@@ -75,6 +75,18 @@ export class TaskService {
     return { totalTasksQty, totalPagesQty, tasksOnPageQty, tasks };
   }
 
+  async getTaskById(_id: string, userId: Types.ObjectId) {
+    try {
+      const task = await this.taskModel.findOne(
+        { _id, author: userId },
+        { author: false },
+      );
+      return task;
+    } catch (error) {
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
   async create(data: CreateTaskDto, userId: Types.ObjectId) {
     const doc = new this.taskModel({
       ...data,

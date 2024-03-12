@@ -8,12 +8,13 @@ import {
   Query,
   Body,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { TaskService } from './task.service';
 import { QueryDto } from './dto/query.dto';
-import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
+import { CreateTaskDto, TaskDto, UpdateTaskDto } from './dto/task.dto';
 import {
   TaskResponse,
   DeleteTaskResponse,
@@ -36,11 +37,21 @@ export class TaskController {
   @ApiOperation({ summary: 'Get all task' })
   @ApiOkResponse({ type: GetTasksResponse })
   @Get()
-  async getTask(
+  async getTasks(
     @Req() req: RequestDto,
     @Query() query: QueryDto,
   ): Promise<GetTasksResponse> {
     return this.taskService.get(query, req.userId._id);
+  }
+
+  @ApiOperation({ summary: 'Get task by id' })
+  @ApiOkResponse({ type: TaskDto })
+  @Get('/:id')
+  async getTaskById(
+    @Req() req: RequestDto,
+    @Param('id') _id: string,
+  ): Promise<TaskDto> {
+    return this.taskService.getTaskById(_id, req.userId._id);
   }
 
   @ApiOperation({ summary: 'Create task' })
