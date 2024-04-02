@@ -57,8 +57,8 @@ describe('UserController', () => {
   });
 
   it('should get user by token', async () => {
-    const requestDto: Pick<RequestDto, 'userId'> = {
-      userId: {
+    const requestDto: Pick<RequestDto, 'user'> = {
+      user: {
         _id: new Types.ObjectId(),
       },
     };
@@ -70,8 +70,8 @@ describe('UserController', () => {
   });
 
   it('should update user name', async () => {
-    const requestDto: Pick<RequestDto, 'userId'> = {
-      userId: {
+    const requestDto: Pick<RequestDto, 'user'> = {
+      user: {
         _id: new Types.ObjectId(),
       },
     };

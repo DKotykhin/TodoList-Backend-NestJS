@@ -54,7 +54,7 @@ export class AvatarController {
     )
     avatar: Express.Multer.File,
   ): Promise<UserResponseDto> {
-    return this.avatarService.createAvatar(req.userId._id, avatar);
+    return this.avatarService.createAvatar(req.user._id, avatar);
   }
 
   @ApiOperation({ summary: 'Delete avatar' })
@@ -65,6 +65,6 @@ export class AvatarController {
   @ApiForbiddenResponse({ description: "Can't delete avatar" })
   @Delete()
   async deleteAvatar(@Req() req: RequestDto): Promise<UserResponseDto> {
-    return this.avatarService.deleteAvatar(req.userId._id);
+    return this.avatarService.deleteAvatar(req.user._id);
   }
 }

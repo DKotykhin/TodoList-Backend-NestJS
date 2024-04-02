@@ -64,8 +64,8 @@ describe('TaskController', () => {
 
   it('should create task', async () => {
     const createTaskDto: CreateTaskDto = newTask;
-    const requestDto: Pick<RequestDto, 'userId'> = {
-      userId: {
+    const requestDto: Pick<RequestDto, 'user'> = {
+      user: {
         _id: new Types.ObjectId(),
       },
     };
@@ -78,8 +78,8 @@ describe('TaskController', () => {
   });
 
   it('should get task by id', async () => {
-    const requestDto: Pick<RequestDto, 'userId'> = {
-      userId: {
+    const requestDto: Pick<RequestDto, 'user'> = {
+      user: {
         _id: new Types.ObjectId(),
       },
     };
@@ -93,8 +93,8 @@ describe('TaskController', () => {
   });
 
   it('should get task by id (error)', async () => {
-    const requestDto: Pick<RequestDto, 'userId'> = {
-      userId: {
+    const requestDto: Pick<RequestDto, 'user'> = {
+      user: {
         _id: new Types.ObjectId(),
       },
     };
@@ -110,8 +110,8 @@ describe('TaskController', () => {
   });
 
   it('should delete task', async () => {
-    const requestDto: Pick<RequestDto, 'userId'> = {
-      userId: {
+    const requestDto: Pick<RequestDto, 'user'> = {
+      user: {
         _id: new Types.ObjectId(),
       },
     };

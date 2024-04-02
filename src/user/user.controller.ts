@@ -45,7 +45,7 @@ export class UserController {
   @ApiNotFoundResponse({ description: "Can't find user" })
   @Get('/me')
   async getUserByToken(@Req() req: RequestDto): Promise<UserResponseDto> {
-    return this.userService.getUserByToken(req.userId._id);
+    return this.userService.getUserByToken(req.user._id);
   }
 
   @ApiOperation({ summary: 'Update user name' })
@@ -60,7 +60,7 @@ export class UserController {
     @Req() req: RequestDto,
     @Body() updateName: Pick<RegisterDto, 'name'>,
   ): Promise<UserResponseDto> {
-    return this.userService.updateName(updateName, req.userId._id);
+    return this.userService.updateName(updateName, req.user._id);
   }
 
   @ApiOperation({ summary: 'Confirm user password' })
@@ -76,7 +76,7 @@ export class UserController {
     @Req() req: RequestDto,
     @Body() confirmPassword: PasswordDto,
   ): Promise<ConfirmPasswordResponse> {
-    return this.userService.confirmPassword(confirmPassword, req.userId._id);
+    return this.userService.confirmPassword(confirmPassword, req.user._id);
   }
 
   @ApiOperation({ summary: 'Update user password' })
@@ -92,7 +92,7 @@ export class UserController {
     @Req() req: RequestDto,
     @Body() updatePassword: PasswordDto,
   ): Promise<UserResponseDto> {
-    return this.userService.updatePassword(updatePassword, req.userId._id);
+    return this.userService.updatePassword(updatePassword, req.user._id);
   }
 
   @ApiOperation({ summary: 'Delete user' })
@@ -104,7 +104,7 @@ export class UserController {
   @ApiForbiddenResponse({ description: "Can't delete user" })
   @Delete('/me')
   async deleteUser(@Req() req: RequestDto): Promise<DeleteUserResponse> {
-    return this.userService.deleteUser(req.userId._id);
+    return this.userService.deleteUser(req.user._id);
   }
 
   @ApiOperation({ summary: 'Get task statistic' })
@@ -114,6 +114,6 @@ export class UserController {
   })
   @Get('/statistic')
   async getStatistic(@Req() req: RequestDto): Promise<TaskStatisticResponse> {
-    return this.userService.statistic(req.userId._id);
+    return this.userService.statistic(req.user._id);
   }
 }

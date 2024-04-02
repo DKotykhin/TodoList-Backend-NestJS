@@ -41,7 +41,7 @@ export class TaskController {
     @Req() req: RequestDto,
     @Query() query: QueryDto,
   ): Promise<GetTasksResponse> {
-    return this.taskService.get(query, req.userId._id);
+    return this.taskService.get(query, req.user._id);
   }
 
   @ApiOperation({ summary: 'Get task by id' })
@@ -51,7 +51,7 @@ export class TaskController {
     @Req() req: RequestDto,
     @Param('id') _id: string,
   ): Promise<TaskDto> {
-    return this.taskService.getTaskById(_id, req.userId._id);
+    return this.taskService.getTaskById(_id, req.user._id);
   }
 
   @ApiOperation({ summary: 'Create task' })
@@ -65,7 +65,7 @@ export class TaskController {
     @Req() req: RequestDto,
     @Body() createTask: CreateTaskDto,
   ): Promise<TaskResponse> {
-    return this.taskService.create(createTask, req.userId._id);
+    return this.taskService.create(createTask, req.user._id);
   }
 
   @ApiOperation({ summary: 'Update task' })
@@ -79,7 +79,7 @@ export class TaskController {
     @Req() req: RequestDto,
     @Body() updateTask: UpdateTaskDto,
   ): Promise<TaskResponse> {
-    return this.taskService.update(updateTask, req.userId._id);
+    return this.taskService.update(updateTask, req.user._id);
   }
 
   @ApiOperation({ summary: 'Delete task' })
@@ -93,6 +93,6 @@ export class TaskController {
     @Req() req: RequestDto,
     @Body('_id') _id: string,
   ): Promise<DeleteTaskResponse> {
-    return this.taskService.delete(_id, req.userId._id);
+    return this.taskService.delete(_id, req.user._id);
   }
 }
