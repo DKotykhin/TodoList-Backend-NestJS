@@ -7,6 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -14,15 +15,19 @@ export class AuthGuard implements CanActivate {
 
   canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const req = context.switchToHttp().getRequest();
+  ): Promise<boolean> | Observable<boolean> | boolean {
+    const request = context.switchToHttp().getRequest();
     try {
-      const token = req.headers.authorization.split(' ')[1];
-      const user = this.jwtService.verify(token);
-      req.user = user;
-      return Boolean(user._id);
+      const token = this.extractTokenFromHeader(request);
+      const payload = this.jwtService.verify(token);
+      request.user = payload;
+      return Boolean(payload._id);
     } catch (err) {
-      throw new HttpException('Authorization denied', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
+  }
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
   }
 }

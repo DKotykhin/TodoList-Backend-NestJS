@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -6,6 +13,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 
 import { AuthService } from './auth.service';
 
@@ -34,7 +42,10 @@ export class AuthController {
   @ApiBadRequestResponse({ description: 'Incorrect login or password' })
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  login(@Body() loginInput: LoginDto): Promise<AuthResponseDto> {
-    return this.authService.login(loginInput);
+  login(
+    @Body() loginInput: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<AuthResponseDto> {
+    return this.authService.login(loginInput, response);
   }
 }

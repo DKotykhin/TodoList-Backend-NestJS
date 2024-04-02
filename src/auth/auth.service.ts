@@ -2,6 +2,7 @@ import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Response } from 'express';
 
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { User, UserDocument } from '../user/schema/user.schema';
@@ -30,13 +31,13 @@ export class AuthService {
       name,
     });
     const { _id, createdAt } = user;
-    const token = this.jwtService.sign({ _id: user._id });
+    const token = this.jwtService.sign({ _id });
     const message = `User ${name} successfully created`;
 
     return { _id, email, name, createdAt, token, message };
   }
 
-  async login(loginInput: LoginDto) {
+  async login(loginInput: LoginDto, response: Response) {
     const { email, password } = loginInput;
     const user = await this.userModel.findOne({ email });
     if (!user) {
@@ -50,8 +51,9 @@ export class AuthService {
       user.passwordHash,
       'Incorrect login or password',
     );
-    const token = this.jwtService.sign({ _id: user._id });
     const { _id, createdAt, name, avatarURL } = user;
+    const token = this.jwtService.sign({ _id });
+    response.cookie('token', token, { httpOnly: true });
     const message = `User ${name} successfully logged`;
 
     return { _id, email, name, createdAt, avatarURL, token, message };
